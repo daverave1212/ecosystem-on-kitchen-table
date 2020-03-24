@@ -7,24 +7,41 @@ using UnityEngine.XR.ARSubsystems;
 public class PlacementTarget : MonoBehaviour
 {
     [SerializeField]
-    private ARSessionOrigin arOrigin;
-
-    [SerializeField]
     private GameObject placementIndicator;
     
     private Pose _targetPlacement;
+
+    [SerializeField] private GameObject whatObject;
     
     [SerializeField]
     private ARRaycastManager raycastManager;
 
     private bool _placementPoseIsValid = false;
+
+    private GameObject prefabRef;
     
     private void Update()
     { 
       UpdatePlacementPose();
       UpdatePlacementTarget();
+      
+      if (_placementPoseIsValid && Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+      {
+          PlaceObject();
+      }
     }
 
+    private void PlaceObject()
+    {
+        if (!prefabRef)
+        {
+            prefabRef = Instantiate(whatObject, _targetPlacement.position, _targetPlacement.rotation);
+        }
+        else
+        {
+            prefabRef.transform.position = _targetPlacement.position;
+        }
+    }
     private void UpdatePlacementPose()
     {
         Vector3 screenCenter = Camera.current.ViewportToScreenPoint(new Vector3(0.5f, 0.5f));
