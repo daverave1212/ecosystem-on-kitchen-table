@@ -183,6 +183,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   arOrigin: {fileID: 1536611947}
   placementIndicator: {fileID: 203882147}
+  whatObject: {fileID: 1390494814166669207, guid: e7f3742b893a0c747846a1e879adccbb,
+    type: 3}
   raycastManager: {fileID: 1536611949}
 --- !u!4 &223974228
 Transform:
