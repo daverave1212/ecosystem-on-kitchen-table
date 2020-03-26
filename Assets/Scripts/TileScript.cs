@@ -15,9 +15,16 @@ public class TileScript : MonoBehaviour
 
 
 
-    string type = "grass";
-    int row = 0;
-    int col = 0;
+    public string type = "grass";
+    public int row = 0;
+    public int col = 0;
+    public AnimalScript animalOn = null;
+
+
+    // TODO
+    public TileScript GetAdjacentTile(int direction) {  // direction = AnimalScript.UP or DOWN or etc
+        return this;
+    }
 
     public void Initialize(float x, float y, float z, int i, int j, string type) {
         var yOffset = 0.05f;

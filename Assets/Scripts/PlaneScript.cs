@@ -12,13 +12,17 @@ public class PlaneScript : MonoBehaviour
     public static float TILE_SIZE_X = 1.0f;
     public static float TILE_SIZE_Y = 0.25f;
     public static float TILE_SIZE_Z = 1.0f;
+    public static float ANIMAL_FEET_HEIGHT = 0.125f;
 
     const int nTilesRows = 16;
     const int nTilesCols = 16;
 
-    GameObject[,] tiles;
+    public static string[,] terrainMatrix;
+    public static GameObject[,] tiles;
 
     void SpawnTiles() {
+        MapGeneration mapGenerator = new MapGeneration();
+        terrainMatrix = mapGenerator.Generate(16, 3, 3, 50);
         float totalWidth = nTilesRows * TILE_SIZE_X;
         float totalHeight = nTilesCols * TILE_SIZE_Z;
         float topMostPoint = 0 - totalHeight / 2;
@@ -31,12 +35,7 @@ public class PlaneScript : MonoBehaviour
                 var x = leftMostPoint + col * TILE_SIZE_X;
                 var y = TILE_SIZE_Y / 2;
                 var z = topMostPoint + row * TILE_SIZE_Z;
-                var type = "grass";
-                switch (rand.Next(1, 4)) {
-                    case 1: type = "grass"; break;
-                    case 2: type = "sand"; break;
-                    case 3: type = "water"; break;
-                }
+                var type = terrainMatrix[row, col];
                 newTile.GetComponent<TileScript>().Initialize(x, y, z, row, col, type);
                 tiles[row,col] = newTile;
             }

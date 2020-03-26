@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 
-public class MapGeneration : MonoBehaviour
+public class MapGeneration
 {
     public const string grass = "grass";
     public const string water = "water";
     public const string sand = "sand";
 
-    private void RandomGridGenerator(ref string[,] gameMap, int gridSize, int localGridSize, int x, int y, int w, Random rnd) {
+    private void RandomGridGenerator(ref string[,] gameMap, int gridSize, int localGridSize, int x, int y, int w, System.Random rnd) {
         // Check if lake falls outside of grid and create start and end positions for x and y
         int xStart = Math.Max(x - localGridSize, 0);
         int yStart = Math.Max(y - localGridSize, 0);
@@ -52,7 +52,7 @@ public class MapGeneration : MonoBehaviour
     w is the minimum weigth needed for a square to become water, providing grater control on lake generation; w needs to be between 0 and 99 (smaller w for larger lakes).
     */
     public string[,] Generate(int gridSize, int maxLakeSize, int maxNumberOfLakes, int w) {
-        Random rnd = new Random();
+        System.Random rnd = new System.Random();
         string [,] gameMap = new string [gridSize, gridSize];
         // Initialize the grid
         for(int i = 0; i < gridSize; i++)
@@ -67,17 +67,5 @@ public class MapGeneration : MonoBehaviour
         }
         addSand(ref gameMap, gridSize);
         return gameMap;
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
