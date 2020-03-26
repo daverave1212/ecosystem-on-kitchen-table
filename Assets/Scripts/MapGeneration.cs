@@ -45,7 +45,7 @@ public class MapGeneration
     }
 
     /*
-    This is the function that you call to generate the random grid; returns a string two-dimensional array that has the values "grass" and "water";
+    This is the function that you call to generate the random grid; returns a string two-dimensional array that has the values "grass", "water" and "sand";
     gridSize is the size of the game grid;
     maxLakeSize represents the number of squares around the lake center that may be changed to "water"; each square within the mini-grid is given a score between 0 and 99;
     maxNumberOfLakes represents the number of lakes to be generated; some lakes may overlap, creating larger lakes;
