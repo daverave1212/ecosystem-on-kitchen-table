@@ -5,6 +5,10 @@ using UnityEngine;
 
 public class MapGeneration : MonoBehaviour
 {
+    public const string grass = "grass";
+    public const string water = "water";
+    public const string sand = "sand";
+
     private void RandomGridGenerator(ref string[,] gameMap, int gridSize, int localGridSize, int x, int y, int w, Random rnd) {
         // Check if lake falls outside of grid and create start and end positions for x and y
         int xStart = Math.Max(x - localGridSize, 0);
@@ -20,7 +24,23 @@ public class MapGeneration : MonoBehaviour
                 float score = 1 - (distance / maxDistance);
                 // For each square inside the mini-grid generate a random weigth and compare that to w
                 if(score * (rnd.Next(0, 99)) >= w)
-                    gameMap[i,j] = "water";
+                    gameMap[i,j] = water;
+            }
+    }
+
+    private void addSand(ref string[,] gameMap, int gridSize) {
+        for(int i = 0; i < gridSize; i++)
+            for(int j = 0; j < gridSize; j++) {
+                if(gameMap[i,j] == grass) {
+                    if(i > 0 && gameMap[i-1,j] == water)
+                        gameMap[i,j] = sand;
+                    if(j > 0 && gameMap[i,j-1] == water)
+                        gameMap[i,j] = sand;
+                    if(i < gridSize-1 && gameMap[i+1,j] == water)
+                        gameMap[i,j] = sand;
+                    if(j < gridSize-1 && gameMap[i,j+1] == water)
+                        gameMap[i,j] = sand;
+                }
             }
     }
 
@@ -37,7 +57,7 @@ public class MapGeneration : MonoBehaviour
         // Initialize the grid
         for(int i = 0; i < gridSize; i++)
             for(int j = 0; j < gridSize; j++)
-                gameMap[i,j] = "grass";
+                gameMap[i,j] = grass;
         for(int i = 0; i <= maxNumberOfLakes; i++) {
             // Generate lake center positions
             int x = rnd.Next(0, gridSize-1);
@@ -45,6 +65,7 @@ public class MapGeneration : MonoBehaviour
             // Generate random lake mini-grid around it
             RandomGridGenerator(ref gameMap, gridSize, maxLakeSize, x, y, w, rnd);
         }
+        addSand(ref gameMap, gridSize);
         return gameMap;
     }
 
