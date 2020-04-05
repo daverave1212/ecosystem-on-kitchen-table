@@ -40,7 +40,13 @@ public class AnimalScript : MonoBehaviour
         LeapToTile(tileToMoveTo);
     }
 
-
+    public void MoveToPosition(Vector3 to) {
+        GetComponent<Slider>().SlideTo(to);
+        //var q = Quaternion.LookRotation(to - transform.position);
+        //transform.rotation = Quaternion.RotateTowards(transform.rotation, q, 0);
+        transform.LookAt(to);
+        GetComponent<Animator>().Play("Run");
+    }
 
 
 
