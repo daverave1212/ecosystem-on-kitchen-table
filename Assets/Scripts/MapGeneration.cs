@@ -75,7 +75,8 @@ public class MapGeneration
     gridSize is the size of the game grid;
     maxLakeSize represents the number of squares around the lake center that may be changed to "water"; each square within the mini-grid is given a score between 0 and 99;
     maxNumberOfLakes represents the number of lakes to be generated; some lakes may overlap, creating larger lakes;
-    w is the minimum weigth needed for a square to become water, providing grater control on lake generation; w needs to be between 0 and 99 (smaller w for larger lakes).
+    w is the minimum weigth needed for a square to become water, providing grater control on lake generation; w needs to be between 0 and 99 (smaller w for larger lakes);
+    numberOfTrees is the number of trees to be added; if there isn't enough space, all possible space is filled and the two dimensional array is returned as is.
     */
     public string[,] Generate(int gridSize, int maxLakeSize, int maxNumberOfLakes, int w, int numberOfTrees) {
         System.Random rnd = new System.Random();
