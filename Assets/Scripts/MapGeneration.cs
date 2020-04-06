@@ -8,6 +8,7 @@ public class MapGeneration
     public const string grass = "grass";
     public const string water = "water";
     public const string sand = "sand";
+    public const string tree = "tree";
 
     private void RandomGridGenerator(ref string[,] gameMap, int gridSize, int localGridSize, int x, int y, int w, System.Random rnd) {
         // Check if lake falls outside of grid and create start and end positions for x and y
@@ -44,6 +45,31 @@ public class MapGeneration
             }
     }
 
+    private void addTrees(ref string[,] gameMap, int gridSize, int numberOfTrees, System.Random rnd) {
+        int n = 0;
+        List<int> xPoz = new List<int>();
+        List<int> yPoz = new List<int>();
+        // Mark all possible tree positions
+        for(int i = 0; i < gridSize; i++)
+            for(int j = 0; j < gridSize; j++)
+                if(gameMap[i,j] == grass) {
+                    xPoz.Add(i);
+                    yPoz.Add(j);
+                    n++;
+                }
+        // If more trees are reqested than available space, shrink tree size to maximum allowed
+        if(n < numberOfTrees)
+            numberOfTrees = n;
+        // Choose random values for tree positions than pop them from the list
+        for(int i = 0; i < numberOfTrees; i++) {
+            int k = rnd.Next(0, n-1);
+            gameMap[xPoz[k],yPoz[k]] = tree;
+            xPoz.RemoveAt(k);
+            yPoz.RemoveAt(k);
+            n = n-1;
+        }
+    }
+
     /*
     This is the function that you call to generate the random grid; returns a string two-dimensional array that has the values "grass", "water" and "sand";
     gridSize is the size of the game grid;
@@ -51,7 +77,7 @@ public class MapGeneration
     maxNumberOfLakes represents the number of lakes to be generated; some lakes may overlap, creating larger lakes;
     w is the minimum weigth needed for a square to become water, providing grater control on lake generation; w needs to be between 0 and 99 (smaller w for larger lakes).
     */
-    public string[,] Generate(int gridSize, int maxLakeSize, int maxNumberOfLakes, int w) {
+    public string[,] Generate(int gridSize, int maxLakeSize, int maxNumberOfLakes, int w, int numberOfTrees) {
         System.Random rnd = new System.Random();
         string [,] gameMap = new string [gridSize, gridSize];
         // Initialize the grid
@@ -66,6 +92,7 @@ public class MapGeneration
             RandomGridGenerator(ref gameMap, gridSize, maxLakeSize, x, y, w, rnd);
         }
         addSand(ref gameMap, gridSize);
+        addTrees(ref gameMap, gridSize, numberOfTrees, rnd);
         return gameMap;
     }
 }
