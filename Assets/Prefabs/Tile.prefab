@@ -109,3 +109,8 @@ MonoBehaviour:
   grassMaterial: {fileID: 2100000, guid: 7a7adb8638936d04686a407423afed0f, type: 2}
   waterMaterial: {fileID: 2100000, guid: 1bb29289bce37d745a90911418317a4f, type: 2}
   sandMaterial: {fileID: 2100000, guid: daad5fd4aafebf14dac83456b1e588a5, type: 2}
+  treePrefab: {fileID: 114418, guid: 8b2d47fdc2e25ac4f9721480a68bbefa, type: 3}
+  type: grass
+  row: 0
+  col: 0
+  animalOn: {fileID: 0}

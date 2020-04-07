@@ -9,6 +9,8 @@ public class TileScript : MonoBehaviour
     public Material waterMaterial;
     public Material sandMaterial;
 
+    public GameObject treePrefab;
+
     public static string GRASS = "grass";
     public static string WATER = "water";
     public static string SAND  = "sand";
@@ -19,6 +21,7 @@ public class TileScript : MonoBehaviour
     public int row = 0;
     public int col = 0;
     public AnimalScript animalOn = null;
+    public GameObject tree = null;
 
 
     // TODO
@@ -28,6 +31,14 @@ public class TileScript : MonoBehaviour
 
     public void Initialize(float x, float y, float z, int i, int j, string type) {
         var yOffset = 0.05f;
+        if (type == "tree") {
+            type = "grass";
+            tree = Instantiate(treePrefab);
+            tree.transform.position = new Vector3(x, y, z);
+            var theRotation = UnityEngine.Random.Range(0, 360);
+            //tree.transform.rotation = Quaternion.EulerAngles(0, theRotation, 0);
+            tree.transform.eulerAngles = new Vector3(0, theRotation, 0);
+        }
         this.type = type;
         gameObject.transform.position = new Vector3(x, y, z);
         var material = grassMaterial;
