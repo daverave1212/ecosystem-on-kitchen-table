@@ -48,6 +48,8 @@ public class TileScript : MonoBehaviour
     }
 
     public void Initialize(float x, float y, float z, int i, int j, string type) {
+        row = i;
+        col = j;
         var yOffset = 0.05f;
         if (type == "tree") {
             type = "grass";
