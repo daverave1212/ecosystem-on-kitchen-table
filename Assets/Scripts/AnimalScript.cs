@@ -41,15 +41,22 @@ public class AnimalScript : MonoBehaviour
     }
 
     public void MoveToPosition(Vector3 to) {
-        GetComponent<Slider>().SlideTo(to);
         //var q = Quaternion.LookRotation(to - transform.position);
         //transform.rotation = Quaternion.RotateTowards(transform.rotation, q, 0);
         transform.LookAt(to);
         GetComponent<Animator>().Play("Run");
+        GetComponent<Slider>().SlideTo(to, delegate (int param) {
+            print("Done moving");
+            GetComponent<Animator>().Play("Idle");
+        });
+
     }
 
 
-
+    public void MoveToTile(GameObject tile) {
+        var to = new Vector3(tile.transform.position.x, transform.position.y, tile.transform.position.z);
+        MoveToPosition(to);
+    }
 
     public void PutOnTile(GameObject tile) {
         gameObject.transform.position = new Vector3(tile.transform.position.x, PlaneScript.ANIMAL_FEET_HEIGHT, tile.transform.position.y);

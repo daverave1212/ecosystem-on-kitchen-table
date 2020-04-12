@@ -22,7 +22,25 @@ public class TileScript : MonoBehaviour
     public int col = 0;
     public AnimalScript animalOn = null;
     public GameObject tree = null;
+    public GameObject plantOn = null;
+    public GameObject grassOn = null;   // only visual, has no effect
+    public GameObject flowersOn = null; // only visual, has no effect
 
+    static float floatSpeed = 0.05f;
+    static float floatLimit = 0.06f;
+    bool isWater = false;
+    float floatAmount = 0;
+    bool goingDown = true;
+
+    public bool HasAnimal() { return animalOn != null; }
+    public bool HasPlant() { return plantOn != null; }
+    public bool HasTree() { return tree != null; }
+    public bool IsOccupied() { return type == "water" || HasAnimal() || HasPlant() || HasTree(); }
+    public void SpawnPlant() {
+        var plantPrefab = PlaneScript.self.plantPrefab;
+        plantOn = Instantiate(plantPrefab);
+        plantOn.transform.position = this.transform.position;
+    }
 
     // TODO
     public TileScript GetAdjacentTile(int direction) {  // direction = AnimalScript.UP or DOWN or etc
@@ -45,6 +63,18 @@ public class TileScript : MonoBehaviour
         if (type == "grass") {
             gameObject.transform.localScale += new Vector3(0, yOffset, 0);
             gameObject.transform.position += new Vector3(0, yOffset / 2, 0);
+            if (Random.Range(1, 3) == 1) {
+                grassOn = Instantiate(PlaneScript.self.grassPrefab);
+                grassOn.transform.position = transform.position;
+                var theRotation = UnityEngine.Random.Range(0, 360);
+                grassOn.transform.eulerAngles = new Vector3(0, theRotation, 0);
+            }
+            if (Random.Range(1, 5) == 1) {
+                flowersOn = Instantiate(PlaneScript.self.flowersPrefab);
+                flowersOn.transform.position = transform.position;
+                var theRotation = UnityEngine.Random.Range(0, 360);
+                flowersOn.transform.eulerAngles = new Vector3(0, theRotation, 0);
+            }
         }
         if (type == "sand") {
             material = sandMaterial;
@@ -53,15 +83,31 @@ public class TileScript : MonoBehaviour
             material = waterMaterial;
             gameObject.transform.localScale -= new Vector3(0, yOffset, 0);
             gameObject.transform.position -= new Vector3(0, yOffset / 2, 0);
+            isWater = true;
+            floatAmount = Random.Range(-floatLimit, floatLimit);
+            transform.position += new Vector3(0, floatAmount, 0);
+            if (Random.Range(1, 2) == 1) goingDown = true;
         }
         GetComponent<Renderer>().material = material;
+        
     }
 
     void Start() {
         
     }
 
+    
     void Update() {
-        
+        if (!isWater) return;
+        var extraFloat = Time.deltaTime * floatSpeed;
+        if (goingDown) {
+            transform.position -= new Vector3(0, extraFloat, 0);
+            floatAmount -= extraFloat;
+            if (floatAmount <= -floatLimit) goingDown = false;
+        } else {
+            transform.position += new Vector3(0, extraFloat, 0);
+            floatAmount += extraFloat;
+            if (floatAmount >= floatLimit) goingDown = true;
+        }
     }
 }
