@@ -5,11 +5,16 @@ using UnityEngine;
 public class AnimalScript : MonoBehaviour
 {
 
-    public const int NONE   = 0;
-    public const int UP     = 1;
-    public const int RIGHT  = 2;
-    public const int DOWN   = 3;
-    public const int LEFT   = 4;
+    public static int NONE   = 0;
+
+    public static int UP     = 1;
+    public static int RIGHT  = 2;
+    public static int DOWN   = 3;
+    public static int LEFT   = 4;
+
+    public static int EAT   = 1;
+    public static int MATE  = 2;
+    public static int RUN   = 3;
 
     public string name = "Animal";  // Name of the species
     public float speed = 1;         // Ticks every <speed> seconds
@@ -21,10 +26,21 @@ public class AnimalScript : MonoBehaviour
     public float size = 1;
     public TileScript tileOn;
     
+    public int FindPath() {
+        print("FindPath not overriden!!");
+        return NONE;
+    }
+
     public bool IsHungry() { return currentHunger <= maxHunger / 2; }
     public bool IsReadyToMate() { return currentHappiness >= maxHappiness; }
     public Vector2Int GetPositionInMatrix() {
         return new Vector2Int(tileOn.row, tileOn.col);
+    }
+
+    public int GetMood() {
+        if (IsHungry()) return EAT;
+        if (IsReadyToMate()) return MATE;
+        return NONE;
     }
 
 
@@ -54,6 +70,7 @@ public class AnimalScript : MonoBehaviour
 
 
     public void MoveToTile(GameObject tile) {
+        // TODO: clear tileOn and animalOn
         var to = new Vector3(tile.transform.position.x, transform.position.y, tile.transform.position.z);
         MoveToPosition(to);
     }
@@ -74,11 +91,6 @@ public class AnimalScript : MonoBehaviour
         maxHappiness = (mother.maxHappiness + father.maxHappiness) / 2;
         size = (mother.size + father.size) / 2;
         speed = (mother.speed + father.speed) / 2;
-    }
-
-    public int FindPath() {
-        print("FindPath not overriden!!");
-        return NONE;
     }
 
     public void Mutate() {
