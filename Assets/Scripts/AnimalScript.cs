@@ -12,6 +12,7 @@ public class AnimalScript : MonoBehaviour
     public static int DOWN   = 3;
     public static int LEFT   = 4;
 
+    public static int NO_MOOD = 0;
     public static int EAT   = 1;
     public static int MATE  = 2;
     public static int RUN   = 3;
@@ -40,7 +41,7 @@ public class AnimalScript : MonoBehaviour
     public int GetMood() {
         if (IsHungry()) return EAT;
         if (IsReadyToMate()) return MATE;
-        return NONE;
+        return NO_MOOD;
     }
 
 
