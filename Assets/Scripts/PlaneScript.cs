@@ -25,7 +25,7 @@ public class PlaneScript : MonoBehaviour
     const int nTilesCols = 32;
     const int nTrees = 20;
     const int nInitialPlants = 10;
-    const int nInitialRabbits = 5;
+    const int nInitialRabbits = 1;
 
     public static string[,] terrainMatrix;
     public static GameObject[,] tiles;
