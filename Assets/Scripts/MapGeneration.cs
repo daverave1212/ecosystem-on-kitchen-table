@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 
-public class MapGeneration
+public class MapGeneration : MonoBehaviour
 {
     public const string grass = "grass";
     public const string water = "water";
@@ -70,6 +70,64 @@ public class MapGeneration
         }
     }
 
+    private void removeSandFromWater(ref string[,] gameMap, int gridSize)
+    {
+        int j = 0;
+        int begin = 0;
+        int last = 0;
+        bool isBigger = false;
+		while(j < gridSize) {
+			for(int i = 0; i < gridSize; i++)
+            {
+            	if (gameMap[i, j] == sand && isBigger == false)
+            	{
+                	begin = i;
+                	isBigger = true;
+                    continue;
+                }
+				if (gameMap[i, j] == sand)
+            	{
+                	last = i;
+            	}
+        	}
+            
+            for (int l = begin + 1; l < last; l++)
+            {
+                gameMap[l, j] = water;
+            }
+			print("Value of begin: " + begin);
+            print("Value of last: " + last);
+			j++;
+			begin = 0;
+			last = 0;	
+			isBigger = false;
+		}
+    }
+
+    private void addSandNearWater(ref string[,] gameMap, int gridSize)
+    {
+        for (int i = 0; i < gridSize; i++)
+        {
+            for (int j = 0; j < gridSize; j++)
+            {
+                if (i < gridSize - 1 && j < gridSize - 1)
+                {
+                    if ((gameMap[i, j] == grass && gameMap[i + 1, j] == water) ||
+                        (gameMap[i, j] == grass && gameMap[i, j + 1] == water))
+                    {
+                        gameMap[i, j] = sand;
+                    }
+                    
+                    else if ((gameMap[i, j] == water && gameMap[i + 1, j] == grass) ||
+                        (gameMap[i, j] == water && gameMap[i, j + 1] == grass))
+                    {
+                        gameMap[i, j] = sand;
+                    }
+                } 
+            }
+        }
+    }
+
     /*
     This is the function that you call to generate the random grid; returns a string two-dimensional array that has the values "grass", "water" and "sand";
     gridSize is the size of the game grid;
@@ -94,6 +152,8 @@ public class MapGeneration
         }
         addSand(ref gameMap, gridSize);
         addTrees(ref gameMap, gridSize, numberOfTrees, rnd);
+        removeSandFromWater(ref gameMap, gridSize);
+        addSandNearWater(ref gameMap, gridSize);
         return gameMap;
     }
 }
