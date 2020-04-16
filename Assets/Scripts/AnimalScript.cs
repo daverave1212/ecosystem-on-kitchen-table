@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class AnimalScript : MonoBehaviour
 {
+    public bool _debug = true;
 
     public static int NONE   = 0;
 
@@ -17,6 +18,9 @@ public class AnimalScript : MonoBehaviour
     public static int MATE  = 2;
     public static int RUN   = 3;
 
+    public static string[] moodToString = {"NO_MOOD", "EAT", "MATE", "RUN"};
+    public static string[] directionToString = {"NONE", "UP", "RIGHT", "DOWN", "LEFT"};
+
     public string name = "Animal";  // Name of the species
     public float speed = 1;         // Ticks every <speed> seconds
     public bool isFemale = false;
@@ -26,6 +30,14 @@ public class AnimalScript : MonoBehaviour
     public int currentHappiness = 25;   // == maxHappiness means it will make babies!
     public float size = 1;
     public TileScript tileOn;
+
+    private void updateTile(TileScript newTile) {
+        if (tileOn != null) tileOn.animalOn = null;
+        if (_debug) tileOn?.SetMaterial(PlaneScript.self._blueMaterial);
+        tileOn = newTile;
+        if (_debug) tileOn?.SetMaterial(PlaneScript.self._magentaMaterial);
+        newTile.animalOn = this;
+    }
     
     public int FindPath() {
         print("FindPath not overriden!!");
@@ -44,17 +56,10 @@ public class AnimalScript : MonoBehaviour
         return NO_MOOD;
     }
 
-
-    // To do: leap to tile
-    public void LeapToTile(TileScript tile) {
-        // Don't forget to clear tileOn and animalOn
-    }
-
     // To do: move one tile in its current direction
     public void Tick() {
-        int directionToMoveTo = FindPath();
-        TileScript tileToMoveTo = tileOn.GetAdjacentTile(directionToMoveTo);
-        LeapToTile(tileToMoveTo);
+        print("Animal tick not overriden!!!");
+        
     }
 
     public void MoveToPosition(Vector3 to) {
@@ -68,23 +73,27 @@ public class AnimalScript : MonoBehaviour
         });
 
     }
-
-
-    public void MoveToTile(GameObject tile) {
-        // TODO: clear tileOn and animalOn
+    public void MoveToTile(GameObject tileObject) {
+        var tile = tileObject.GetComponent<TileScript>();
+        MoveToTile(tile);
+        
+    }
+    public void MoveToTile(TileScript tile) {
+        updateTile(tile);
         var to = new Vector3(tile.transform.position.x, transform.position.y, tile.transform.position.z);
         MoveToPosition(to);
     }
 
-    public void PutOnTile(GameObject tile) {
-        gameObject.transform.position = new Vector3(tile.transform.position.x, PlaneScript.ANIMAL_FEET_HEIGHT, tile.transform.position.y);
-        tileOn = tile.GetComponent<TileScript>();
-        tileOn.animalOn = this;
+
+    public void PutOnTile(GameObject tileObject) {
+        gameObject.transform.position = new Vector3(tileObject.transform.position.x, PlaneScript.ANIMAL_FEET_HEIGHT, tileObject.transform.position.y);
+        var tile = tileObject.GetComponent<TileScript>();
+        updateTile(tile);
     }
     public void PutOnTile(TileScript tile) {
+        updateTile(tile);
+        if (tileOn != null) tileOn.animalOn = null;
         gameObject.transform.position = new Vector3(tile.gameObject.transform.position.x, PlaneScript.ANIMAL_FEET_HEIGHT, tile.gameObject.transform.position.y);
-        tileOn = tile;
-        tileOn.animalOn = this;
     }
 
     public void CreateAsOffspring(AnimalScript mother, AnimalScript father) {
@@ -104,6 +113,5 @@ public class AnimalScript : MonoBehaviour
         if (generateMutationNumber() > 1) isFemale = true;
         gameObject.transform.localScale = new Vector3(size, size, size);
     }
-
     
 }

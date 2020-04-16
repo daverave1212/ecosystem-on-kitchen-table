@@ -44,6 +44,10 @@ public class TileScript : MonoBehaviour
 
     // TODO
     public TileScript GetAdjacentTile(int direction) {  // direction = AnimalScript.UP or DOWN or etc
+        if (direction == AnimalScript.UP) return PlaneScript.GetTile(row - 1, col).GetComponent<TileScript>();
+        if (direction == AnimalScript.RIGHT) return PlaneScript.GetTile(row, col + 1).GetComponent<TileScript>();
+        if (direction == AnimalScript.DOWN) return PlaneScript.GetTile(row - 1, col).GetComponent<TileScript>();
+        if (direction == AnimalScript.LEFT) return PlaneScript.GetTile(row, col - 1).GetComponent<TileScript>();
         return this;
     }
 
@@ -90,15 +94,10 @@ public class TileScript : MonoBehaviour
             transform.position += new Vector3(0, floatAmount, 0);
             if (Random.Range(1, 2) == 1) goingDown = true;
         }
-        GetComponent<Renderer>().material = material;
+        SetMaterial(material);
         
     }
 
-    void Start() {
-        
-    }
-
-    
     void Update() {
         if (!isWater) return;
         var extraFloat = Time.deltaTime * floatSpeed;
@@ -111,5 +110,9 @@ public class TileScript : MonoBehaviour
             floatAmount += extraFloat;
             if (floatAmount >= floatLimit) goingDown = true;
         }
+    }
+
+    public void SetMaterial(Material material) {
+        GetComponent<Renderer>().material = material;
     }
 }

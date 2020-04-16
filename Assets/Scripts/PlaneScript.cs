@@ -6,6 +6,9 @@ using UnityEngine;
 public class PlaneScript : MonoBehaviour
 {
 
+    public Material _magentaMaterial;
+    public Material _blueMaterial;
+
     // Drag and drop the prefabs / materials here in Unity
     public GameObject tilePrefab;
     public GameObject plantPrefab;
@@ -29,6 +32,14 @@ public class PlaneScript : MonoBehaviour
 
     public static string[,] terrainMatrix;
     public static GameObject[,] tiles;
+
+    public static bool tileExists(int i, int j) {
+        return i >= 0 && i < nTilesRows && j >= 0 && j < nTilesCols;
+    }
+    public static GameObject GetTile(int i, int j) {
+        if (tileExists(i, j)) return tiles[i, j];
+        else return null;
+    }
 
     void SpawnTiles() {
         MapGeneration mapGenerator = new MapGeneration();

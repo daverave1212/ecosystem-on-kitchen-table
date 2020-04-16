@@ -5,11 +5,14 @@ using UnityEngine;
 public class Slider : MonoBehaviour
 {
     
+    public static float lengthStop = 1.0f;
+
     public Vector3 fromPoint;
     public Vector3 toPoint;
 
-    public float speed = 1f;
+    public float speed = 100.0f;
     public float startTime;
+
     public float journeyLength;
 
     public event System.Action<int> callback;
@@ -20,7 +23,8 @@ public class Slider : MonoBehaviour
         fromPoint = gameObject.transform.position;
         toPoint = to;
         startTime = Time.time;
-        journeyLength = Vector3.Distance(fromPoint, toPoint);
+        //journeyLength = Vector3.Distance(fromPoint, toPoint);
+        journeyLength = 1f;
         isSliding = true;
         this.callback = callback;
     }
@@ -29,6 +33,7 @@ public class Slider : MonoBehaviour
         if (!isSliding) return;
         float distCovered = (Time.time - startTime) * speed;
         float fractionOfJourney = distCovered / journeyLength;
+        print("Fraction of journey:" + fractionOfJourney);
         transform.position = Vector3.Lerp(fromPoint, toPoint, fractionOfJourney);
         if (fractionOfJourney >= 1) {
             isSliding = false;

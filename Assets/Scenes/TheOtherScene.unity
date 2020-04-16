@@ -153,6 +153,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e3b2819a95a63e43811c52223e29b53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _magentaMaterial: {fileID: 2100000, guid: 9fff8bed91639d94fb6b355f88cbd2b4, type: 2}
+  _blueMaterial: {fileID: 2100000, guid: 99fb926fbd54afe4391d5a4d12368fc1, type: 2}
   tilePrefab: {fileID: 7077848569270701202, guid: f04483dc72c1b3044af3855e5b42c835,
     type: 3}
   plantPrefab: {fileID: 100000, guid: e26c36c102d821c4581a911b1e80588f, type: 3}
