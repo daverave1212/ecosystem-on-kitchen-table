@@ -95,8 +95,8 @@ public class MapGeneration : MonoBehaviour
             {
                 gameMap[l, j] = water;
             }
-			print("Value of begin: " + begin);
-            print("Value of last: " + last);
+			//print("Value of begin: " + begin);
+            //print("Value of last: " + last);
 			j++;
 			begin = 0;
 			last = 0;	

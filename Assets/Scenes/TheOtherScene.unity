@@ -162,7 +162,7 @@ MonoBehaviour:
     type: 3}
   flowersPrefab: {fileID: 6118149239184955027, guid: a0f81977397df2345862ac9e3bd45128,
     type: 3}
-  rabbitPrefab: {fileID: 1969419073538870, guid: aa3784adb6428184e991be2d60ee0cb2,
+  rabbitPrefab: {fileID: 4717515717027632093, guid: 6909fa2b281518e4191c73a4b21234de,
     type: 3}
 --- !u!64 &1095439923
 MeshCollider:
@@ -407,8 +407,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2073713294}
-  m_LocalRotation: {x: 0.39313218, y: -0.29069215, z: 0.13255788, w: 0.86219114}
-  m_LocalPosition: {x: 14.888692, y: 15.330265, z: -19.304745}
+  m_LocalRotation: {x: 0.38097274, y: -0.4268435, z: 0.20482244, w: 0.79417396}
+  m_LocalPosition: {x: 32.057495, y: 27.239422, z: -21.117672}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

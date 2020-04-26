@@ -6,28 +6,16 @@ public class RabbitScript: AnimalScript {
 
 	void Start() {
 		name = "Bunny";
-		GetComponent < Animator > ().Play("Idle");
-		//Invoke("MoveToSomewhere", 1.5f);
-        InvokeRepeating("Tick", 2.0f, 2.0f);
+		GetComponent<Animator>().Play("Idle");
+		//Invoke("_MoveToSomewhere", 1.5f);
+        InvokeRepeating("Tick", speed, speed);
 	}
 
-    void Tick() {
-        print("Ticking rabbit...");
-        int directionToMoveTo = FindPath(EAT);
-        print("Got direction as:" + directionToString[directionToMoveTo]);
-        TileScript tileToMoveTo = tileOn.GetAdjacentTile(directionToMoveTo);
-        print("My tile: " + tileOn.row + ", " + tileOn.col);
-        print("To tile: " + tileToMoveTo.row + ", " + tileToMoveTo.col);
-        print("Moving to tile...");
-        MoveToTile(tileToMoveTo);
-    }
-
-	void MoveToSomewhere() {
+	void _MoveToSomewhere() {
+		print(gameObject.transform.position);
 		var toPos = gameObject.transform.position + new Vector3(4, 0, 3);
 		MoveToPosition(toPos);
 	}
-
-	// TO DO: Return the direction to move to
 
 	int calculeazaDistanta(int liniePlanta, int colPlanta, int linieIepure, int colIepure,int ultimaMutare) {
 		int distanta = 0;
@@ -152,8 +140,7 @@ public class RabbitScript: AnimalScript {
 		return distanta;
 	}
 
-
-    int spuneDrumul(int liniePlanta, int colPlanta, int linieIepure, int colIepure, int[] pozitii,int ultimaMutare) {
+    int spuneDrumul(int liniePlanta, int colPlanta, int linieIepure, int colIepure, int[] pozitii, int ultimaMutare) {
         int pozitie = -1;
       
         while (liniePlanta != linieIepure || colPlanta != colIepure)
@@ -173,7 +160,7 @@ public class RabbitScript: AnimalScript {
                     if ((!(PlaneScript.tiles[linieIepure - 1, colIepure].GetComponent<TileScript>().IsOccupied()))&&ultimaMutare!= UP)
                     {
                         linieIepure = linieIepure - 1;
-                        //print("DOWN");
+                        print("DOWN");
                         pozitii[pozitie] = DOWN;
                         ultimaMutare = DOWN;
                         continue;
@@ -188,7 +175,7 @@ public class RabbitScript: AnimalScript {
                             if ((!(PlaneScript.tiles[linieIepure, colIepure - 1].GetComponent<TileScript>().IsOccupied()))&& ultimaMutare != RIGHT)
                             {
                                 colIepure = colIepure - 1;
-                                //print("LEFT");
+                                print("LEFT");
                                 pozitii[pozitie] = LEFT;
                                 ultimaMutare = LEFT;
                                 continue;
@@ -201,7 +188,7 @@ public class RabbitScript: AnimalScript {
                                 if ((!(PlaneScript.tiles[linieIepure, colIepure + 1].GetComponent<TileScript>().IsOccupied())) && ultimaMutare != LEFT)
                                 {
                                     colIepure = colIepure + 1;
-                                    //print("RIGTH");
+                                    print("RIGTH");
                                     pozitii[pozitie] = RIGHT;
                                     ultimaMutare = RIGHT;
                                     continue;
@@ -211,7 +198,7 @@ public class RabbitScript: AnimalScript {
                     }
                 }
                 linieIepure = linieIepure + 1;
-                //print("UP");
+                print("UP");
                 pozitii[pozitie] = UP;
                 ultimaMutare = UP;
 
@@ -224,7 +211,7 @@ public class RabbitScript: AnimalScript {
                     if ((!(PlaneScript.tiles[linieIepure + 1, colIepure].GetComponent<TileScript>().IsOccupied()))&&ultimaMutare != DOWN)
                     {
                         linieIepure = linieIepure + 1;
-                        //print("UP");
+                        print("UP");
                         pozitii[pozitie] = UP;
                         ultimaMutare = UP;
 
@@ -241,7 +228,7 @@ public class RabbitScript: AnimalScript {
                             if ((!(PlaneScript.tiles[linieIepure, colIepure - 1].GetComponent<TileScript>().IsOccupied())) && ultimaMutare != RIGHT)
                             {
                                 colIepure = colIepure - 1;
-                                //print("LEFT");
+                                print("LEFT");
                                 pozitii[pozitie] = LEFT;
                                 ultimaMutare = LEFT;
 
@@ -255,7 +242,7 @@ public class RabbitScript: AnimalScript {
                                 if ((!(PlaneScript.tiles[linieIepure, colIepure + 1].GetComponent<TileScript>().IsOccupied())) && ultimaMutare != LEFT)
                                 {
                                     colIepure = colIepure + 1;
-                                    //print("RIGTH");
+                                    print("RIGTH");
                                     pozitii[pozitie] = RIGHT;
                                     ultimaMutare = RIGHT;
 
@@ -266,7 +253,7 @@ public class RabbitScript: AnimalScript {
                     }
                 }
                 linieIepure = linieIepure - 1;
-                //print("DOWN");
+                print("DOWN");
                 pozitii[pozitie] = DOWN;
                 ultimaMutare = DOWN;
 
@@ -281,7 +268,7 @@ public class RabbitScript: AnimalScript {
                         if ((!(PlaneScript.tiles[linieIepure, colIepure - 1].GetComponent<TileScript>().IsOccupied())) && ultimaMutare != RIGHT)
                         {
                             colIepure = colIepure - 1;
-                            //print("LEFT");
+                            print("LEFT");
                             pozitii[pozitie] = LEFT;
                             ultimaMutare = LEFT;
 
@@ -296,7 +283,7 @@ public class RabbitScript: AnimalScript {
                         if ((!(PlaneScript.tiles[linieIepure, colIepure + 1].GetComponent<TileScript>().IsOccupied())) && ultimaMutare != LEFT)
                         {
                             colIepure = colIepure + 1;
-                            //print("RIGTH");
+                            print("RIGTH");
                             pozitii[pozitie] = RIGHT;
                             ultimaMutare = RIGHT;
 
@@ -309,7 +296,7 @@ public class RabbitScript: AnimalScript {
                     if (!(PlaneScript.tiles[linieIepure - 1, colIepure].GetComponent<TileScript>().IsOccupied()))
                     {
                         linieIepure = linieIepure - 1;
-                        //print("DOWN");
+                        print("DOWN");
                         pozitii[pozitie] = DOWN;
                         ultimaMutare = DOWN;
 
@@ -317,7 +304,7 @@ public class RabbitScript: AnimalScript {
                     }
                 }
                 linieIepure = linieIepure + 1;
-                //print("UP");
+               print("UP");
                 pozitii[pozitie] = UP;
                 ultimaMutare = UP;
 
@@ -332,7 +319,7 @@ public class RabbitScript: AnimalScript {
 	}
    
 	int closestPlant(int linie, int col) {
-        //print("INCEPE");
+        print("INCEPE");
 		/*if(PlaneScript.self.tiles[linie+1,col].GetComponent<TileScript>().HasPlant())
         {
             return UP;
@@ -368,28 +355,85 @@ public class RabbitScript: AnimalScript {
 				    }
 			    }
 		    }
-        //print(pozLinie+" "+pozCol+ "POz iepure:"+linie+" "+col);
+        print(pozLinie+" "+pozCol+ "POz iepure:"+linie+" "+col);
         int[] pozitii=new int[100];
         int pozitie;
 	    pozitie=spuneDrumul(pozLinie, pozCol, linie, col , pozitii, 0);
         
         for(int i = 0; i <= pozitie; i++)
         {
-            //print(pozitii[i]);
+            print(pozitii[i]);
         }
         return pozitii[0];
 	}
 
-	int FindPath(int mood) {
+    int closestRabbit(int linie, int col)
+    {
+        print("INCEPE");
+        /*if(PlaneScript.self.tiles[linie+1,col].GetComponent<TileScript>().HasPlant())
+        {
+            return UP;
+
+        }
+        if (PlaneScript.self.tiles[linie , col+1].GetComponent<TileScript>().HasPlant())
+        {
+            return RIGHT;
+
+        }
+        if (PlaneScript.self.tiles[linie , col-1].GetComponent<TileScript>().HasPlant())
+        {
+            return LEFT;
+        }
+
+        if (PlaneScript.self.tiles[linie - 1, col].GetComponent<TileScript>().HasPlant())
+        {
+            return DOWN;
+
+        }*/
+        int min = 1000;
+        int distantacurenta;
+        int pozLinie = 0;
+        int pozCol = 0;
+        for (int i = 0; i <= 31; i++)
+            for (int j = 0; j <= 31; j++)
+            {
+               if (PlaneScript.tiles[i, j].GetComponent<TileScript>().animalOn.name == "Bunny" && PlaneScript.tiles[i, j].GetComponent<TileScript>().animalOn.IsReadyToMate())
+                {
+                    distantacurenta = calculeazaDistanta(i, j, linie, col, 0);
+                    if (min > distantacurenta)
+                    {
+                        pozLinie = i;
+                        pozCol = j;
+                        min = distantacurenta;
+                    }
+                }
+            }
+        print(pozLinie + " " + pozCol + "POz iepure:" + linie + " " + col);
+        int[] pozitii = new int[100];
+        int pozitie;
+        pozitie = spuneDrumul(pozLinie, pozCol, linie, col, pozitii, 0);
+
+        for (int i = 0; i <= pozitie; i++)
+        {
+            print(pozitii[i]);
+        }
+        return pozitii[0];
+    }
+
+    public void Tick() {
+        var mood = GetMood();
+        var direction = FindPath(mood);
+        MoveInDirection(direction);
+    }
+
+    int FindPath(int mood) {
 		if (mood == NO_MOOD) {
 			return NONE;
 		} else if (mood == EAT) {
-			// Find path to closest plant
-			// return the direction to go to (UP, DOWN, LEFT, RIGHT)
 			return closestPlant(tileOn.row, tileOn.col);
 		} else if (mood == MATE) {
-			// Find path to closest rabbit who is also ready to mate
-		} else if (mood == RUN) {
+            return closestRabbit(tileOn.row, tileOn.col);
+        } else if (mood == RUN) {
 			// Don't make this one for now
 		}
 		return NONE;
@@ -397,7 +441,6 @@ public class RabbitScript: AnimalScript {
 
 	// Update is called once per frame
 	void Update() {
-
         try {
             if (Input.GetKeyDown("space")) {
                 print("Finding path to closest plant:");
@@ -407,5 +450,6 @@ public class RabbitScript: AnimalScript {
             print("EXCEPTION!!!");
             print(e.ToString());
         }
+        
     }
 }

@@ -51,6 +51,15 @@ public class TileScript : MonoBehaviour
         return this;
     }
 
+    const float DEFAULT_VAL = -420.1337f;
+    public Vector3 GetPosition(float defaultX=DEFAULT_VAL, float defaultY=DEFAULT_VAL, float defaultZ=DEFAULT_VAL) {
+        return new Vector3(
+            (defaultX == DEFAULT_VAL)? (gameObject.transform.position.x) :(defaultX),
+            (defaultY == DEFAULT_VAL)? (gameObject.transform.position.y) :(defaultY),
+            (defaultZ == DEFAULT_VAL)? (gameObject.transform.position.z) :(defaultZ)
+        );
+    }
+
     public void Initialize(float x, float y, float z, int i, int j, string type) {
         row = i;
         col = j;

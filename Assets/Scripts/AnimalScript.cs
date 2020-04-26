@@ -22,7 +22,7 @@ public class AnimalScript : MonoBehaviour
     public static string[] directionToString = {"NONE", "UP", "RIGHT", "DOWN", "LEFT"};
 
     public string name = "Animal";  // Name of the species
-    public float speed = 1;         // Ticks every <speed> seconds
+    public float speed = 2;         // Ticks every <speed> seconds
     public bool isFemale = false;
     public int maxHunger = 100;
     public int currentHunger = 50;  // == maxHunger means it is perfectly saturated
@@ -51,25 +51,27 @@ public class AnimalScript : MonoBehaviour
     }
 
     public int GetMood() {
-        if (IsHungry()) return EAT;
-        if (IsReadyToMate()) return MATE;
+        if (IsHungry()) {
+            print("I is hungry..");
+            return EAT;
+        }
+        if (IsReadyToMate()) {
+            print("I want luv..");
+            return MATE;
+        }
+        print("Im ok :3");
         return NO_MOOD;
     }
 
     // To do: move one tile in its current direction
-    public void Tick() {
-        print("Animal tick not overriden!!!");
-        
-    }
+    public void Tick() { print("Animal tick not overriden!!!"); }
 
     public void MoveToPosition(Vector3 to) {
-        //var q = Quaternion.LookRotation(to - transform.position);
-        //transform.rotation = Quaternion.RotateTowards(transform.rotation, q, 0);
         transform.LookAt(to);
         GetComponent<Animator>().Play("Run");
         GetComponent<Slider>().SlideTo(to, delegate (int param) {
             print("Done moving");
-            GetComponent<Animator>().Play("Idle");
+            //GetComponent<Animator>().Play("Idle");
         });
 
     }
@@ -83,17 +85,30 @@ public class AnimalScript : MonoBehaviour
         var to = new Vector3(tile.transform.position.x, transform.position.y, tile.transform.position.z);
         MoveToPosition(to);
     }
-
+    public void MoveInDirection(int direction) {
+        var adjacentTile = tileOn.GetAdjacentTile(direction);
+        if (adjacentTile == null) {
+            print("Null adjacent tile when moving in direction " + directionToString[direction]);
+        }
+        if (adjacentTile != tileOn) {
+            MoveToTile(adjacentTile);
+        }
+    }
 
     public void PutOnTile(GameObject tileObject) {
         gameObject.transform.position = new Vector3(tileObject.transform.position.x, PlaneScript.ANIMAL_FEET_HEIGHT, tileObject.transform.position.y);
         var tile = tileObject.GetComponent<TileScript>();
         updateTile(tile);
     }
+
+    void _ToThatTile() {
+        print("Movin");
+        gameObject.transform.position = tileOn.GetPosition(defaultY : PlaneScript.ANIMAL_FEET_HEIGHT);
+    }
     public void PutOnTile(TileScript tile) {
         updateTile(tile);
-        if (tileOn != null) tileOn.animalOn = null;
-        gameObject.transform.position = new Vector3(tile.gameObject.transform.position.x, PlaneScript.ANIMAL_FEET_HEIGHT, tile.gameObject.transform.position.y);
+        gameObject.transform.position = tileOn.GetPosition(defaultY : PlaneScript.ANIMAL_FEET_HEIGHT);
+        //Invoke("_ToThatTile", 2);
     }
 
     public void CreateAsOffspring(AnimalScript mother, AnimalScript father) {
