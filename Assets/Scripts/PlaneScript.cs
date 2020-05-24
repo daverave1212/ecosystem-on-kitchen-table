@@ -57,6 +57,7 @@ public class PlaneScript : MonoBehaviour
                 var y = TILE_SIZE_Y / 2;
                 var z = topMostPoint + row * TILE_SIZE_Z;
                 var type = terrainMatrix[row, col];
+                newTile.tag = "Tile";
                 newTile.GetComponent<TileScript>().Initialize(x, y, z, row, col, type);
                 tiles[row,col] = newTile;
             }
@@ -96,6 +97,7 @@ public class PlaneScript : MonoBehaviour
             var theTile = tiles[rRow, rCol].GetComponent<TileScript>();
             if (theTile.IsOccupied()) return false;
             var theRabbit = Instantiate(rabbitPrefab);
+            theRabbit.tag = "Animal";
             theRabbit.GetComponent<RabbitScript>().PutOnTile(theTile);
             return true;
         }

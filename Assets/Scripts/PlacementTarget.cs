@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
@@ -35,23 +37,47 @@ public class PlacementTarget : MonoBehaviour
     {
         if (!prefabRef)
         {
-            prefabRef = Instantiate(whatObject, _targetPlacement.position, _targetPlacement.rotation);
+            prefabRef = Instantiate(whatObject, Vector3.zero, _targetPlacement.rotation);
+            // prefabRef.transform.position = _targetPlacement.position;
+            StartCoroutine(ParentHack(_targetPlacement.position));
         }
         else
         {
-            prefabRef.transform.position = _targetPlacement.position;
+            prefabRef.transform.position = _targetPlacement.position * 15;
         }
     }
+
+    IEnumerator ParentHack(Vector3 pos)
+    {
+        yield return null;
+        var objectCenter = new GameObject();
+        List<GameObject> generatedItems = new List<GameObject>();
+        generatedItems.AddRange(GameObject.FindGameObjectsWithTag("Plant"));
+        generatedItems.AddRange(GameObject.FindGameObjectsWithTag("Tile"));
+        generatedItems.AddRange(GameObject.FindGameObjectsWithTag("Animal"));
+        foreach (var generatedItem in generatedItems)
+        {
+            generatedItem.transform.parent = objectCenter.transform;
+        }
+
+        objectCenter.transform.position = pos * 15;
+        prefabRef.transform.localScale = Vector3.zero;
+        prefabRef = objectCenter;
+    }
+    
     private void UpdatePlacementPose()
     {
-        Vector3 screenCenter = Camera.current.ViewportToScreenPoint(new Vector3(0.5f, 0.5f));
-        List<ARRaycastHit> hits = new List<ARRaycastHit>();
-        raycastManager.Raycast(screenCenter, hits, TrackableType.Planes);
-
-        _placementPoseIsValid = hits.Count > 0;
-        if (_placementPoseIsValid)
+        if (Camera.current)
         {
-            _targetPlacement = hits[0].pose;
+            Vector3 screenCenter = Camera.current.ViewportToScreenPoint(new Vector3(0.5f, 0.5f));
+            List<ARRaycastHit> hits = new List<ARRaycastHit>();
+            raycastManager.Raycast(screenCenter, hits, TrackableType.Planes);
+
+            _placementPoseIsValid = hits.Count > 0;
+            if (_placementPoseIsValid)
+            {
+                _targetPlacement = hits[0].pose;
+            }
         }
     }
 

@@ -39,6 +39,7 @@ public class TileScript : MonoBehaviour
     public void SpawnPlant() {
         var plantPrefab = PlaneScript.self.plantPrefab;
         plantOn = Instantiate(plantPrefab);
+        plantOn.tag = "Plant";
         plantOn.transform.position = this.transform.position;
     }
 
@@ -67,6 +68,7 @@ public class TileScript : MonoBehaviour
         if (type == "tree") {
             type = "grass";
             tree = Instantiate(treePrefab);
+            tree.tag = "Plant";
             tree.transform.position = new Vector3(x, y, z);
             var theRotation = UnityEngine.Random.Range(0, 360);
             //tree.transform.rotation = Quaternion.EulerAngles(0, theRotation, 0);
@@ -80,12 +82,14 @@ public class TileScript : MonoBehaviour
             gameObject.transform.position += new Vector3(0, yOffset / 2, 0);
             if (Random.Range(1, 3) == 1) {
                 grassOn = Instantiate(PlaneScript.self.grassPrefab);
+                grassOn.tag = "Plant";
                 grassOn.transform.position = transform.position;
                 var theRotation = UnityEngine.Random.Range(0, 360);
                 grassOn.transform.eulerAngles = new Vector3(0, theRotation, 0);
             }
             if (Random.Range(1, 5) == 1) {
                 flowersOn = Instantiate(PlaneScript.self.flowersPrefab);
+                flowersOn.tag = "Plant";
                 flowersOn.transform.position = transform.position;
                 var theRotation = UnityEngine.Random.Range(0, 360);
                 flowersOn.transform.eulerAngles = new Vector3(0, theRotation, 0);

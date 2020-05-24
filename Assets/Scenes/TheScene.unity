@@ -181,9 +181,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e7ad20e2ed0d4845b28d15a9ac095d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  arOrigin: {fileID: 1536611947}
   placementIndicator: {fileID: 203882147}
-  whatObject: {fileID: 1390494814166669207, guid: e7f3742b893a0c747846a1e879adccbb,
+  whatObject: {fileID: 1982818248052987150, guid: a34338deadd3f68489bcdedd262a7e03,
     type: 3}
   raycastManager: {fileID: 1536611949}
 --- !u!4 &223974228
@@ -194,7 +193,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 223974226}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.9174457, y: -0.6925421, z: 0.8144078}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -344,7 +343,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705507993}
   m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -393,7 +392,7 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 3
+  serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
@@ -488,7 +487,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.1
-  far clip plane: 20
+  far clip plane: 1000
   field of view: 60
   orthographic: 0
   orthographic size: 5
