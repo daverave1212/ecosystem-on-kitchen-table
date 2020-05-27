@@ -1,25 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class AnimalScript : MonoBehaviour
 {
     public bool _debug = true;
 
-    public static int NONE   = 0;
 
-    public static int UP     = 1;
-    public static int RIGHT  = 2;
-    public static int DOWN   = 3;
-    public static int LEFT   = 4;
-
-    public static int NO_MOOD = 0;
-    public static int EAT   = 1;
-    public static int MATE  = 2;
-    public static int RUN   = 3;
-
-    public static string[] moodToString = {"NO_MOOD", "EAT", "MATE", "RUN"};
-    public static string[] directionToString = {"NONE", "UP", "RIGHT", "DOWN", "LEFT"};
 
     public string name = "Animal";  // Name of the species
     public float speed = 2;         // Ticks every <speed> seconds
@@ -31,6 +19,9 @@ public class AnimalScript : MonoBehaviour
     public float size = 1;
     public TileScript tileOn;
 
+    public void AddHunger(int amount) { currentHunger = Math.Min(currentHunger + amount, maxHunger); }
+    public void AddHappiness(int amount) { currentHappiness += amount; }
+
     private void updateTile(TileScript newTile) {
         if (tileOn != null) tileOn.animalOn = null;
         if (_debug) tileOn?.SetMaterial(PlaneScript.self._blueMaterial);
@@ -39,10 +30,6 @@ public class AnimalScript : MonoBehaviour
         newTile.animalOn = this;
     }
     
-    public int FindPath() {
-        print("FindPath not overriden!!");
-        return NONE;
-    }
 
     public bool IsHungry() { return currentHunger <= maxHunger / 2; }
     public bool IsReadyToMate() { return currentHappiness >= maxHappiness; }
@@ -53,18 +40,25 @@ public class AnimalScript : MonoBehaviour
     public int GetMood() {
         if (IsHungry()) {
             print("I is hungry..");
-            return EAT;
+            return K.EAT;
         }
         if (IsReadyToMate()) {
             print("I want luv..");
-            return MATE;
+            return K.MATE;
         }
-        print("Im ok :3");
-        return NO_MOOD;
+        AddHappiness(10);
+        print("Getting happier...");
+        return K.NO_MOOD;
     }
 
-    // To do: move one tile in its current direction
+
+    // Override these two functions
     public void Tick() { print("Animal tick not overriden!!!"); }
+    public int FindPath() {
+        print("FindPath not overriden!!");
+        return K.NONE;
+    }
+
 
     public void MoveToPosition(Vector3 to) {
         transform.LookAt(to);
@@ -88,7 +82,7 @@ public class AnimalScript : MonoBehaviour
     public void MoveInDirection(int direction) {
         var adjacentTile = tileOn.GetAdjacentTile(direction);
         if (adjacentTile == null) {
-            print("Null adjacent tile when moving in direction " + directionToString[direction]);
+            print("Null adjacent tile when moving in direction " + K.directionToString[direction]);
         }
         if (adjacentTile != tileOn) {
             MoveToTile(adjacentTile);
@@ -96,19 +90,18 @@ public class AnimalScript : MonoBehaviour
     }
 
     public void PutOnTile(GameObject tileObject) {
-        gameObject.transform.position = new Vector3(tileObject.transform.position.x, PlaneScript.ANIMAL_FEET_HEIGHT, tileObject.transform.position.y);
+        gameObject.transform.position = new Vector3(tileObject.transform.position.x, K.ANIMAL_FEET_HEIGHT, tileObject.transform.position.y);
         var tile = tileObject.GetComponent<TileScript>();
         updateTile(tile);
     }
 
     void _ToThatTile() {
         print("Movin");
-        gameObject.transform.position = tileOn.GetPosition(defaultY : PlaneScript.ANIMAL_FEET_HEIGHT);
+        gameObject.transform.position = tileOn.GetPosition(defaultY : K.ANIMAL_FEET_HEIGHT);
     }
     public void PutOnTile(TileScript tile) {
         updateTile(tile);
-        gameObject.transform.position = tileOn.GetPosition(defaultY : PlaneScript.ANIMAL_FEET_HEIGHT);
-        //Invoke("_ToThatTile", 2);
+        gameObject.transform.position = tileOn.GetPosition(defaultY : K.ANIMAL_FEET_HEIGHT);
     }
 
     public void CreateAsOffspring(AnimalScript mother, AnimalScript father) {
@@ -128,5 +121,29 @@ public class AnimalScript : MonoBehaviour
         if (generateMutationNumber() > 1) isFemale = true;
         gameObject.transform.localScale = new Vector3(size, size, size);
     }
+
+    public bool EatAdjacentPlantIfNear() {    // If the animal is near a plant, it eats it; returns true if it ate a plant
+        var adjacentTiles = tileOn.GetAdjacentTiles();
+        foreach (var tile in adjacentTiles) {
+            if (tile.HasPlant()) {
+                transform.LookAt(tile.plantOn.transform);
+                tile.KillPlant();
+                AddHunger(50);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public AnimalScript GetAdjacentRabbit() {
+        var adjacentTiles = tileOn.GetAdjacentTiles();
+        foreach (var tile in adjacentTiles) {
+            if (tile.HasRabbit()) {
+                return tile.animalOn;
+            }
+        }
+        return null;
+    }
+
     
 }

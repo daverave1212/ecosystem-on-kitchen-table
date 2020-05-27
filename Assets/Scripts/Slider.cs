@@ -36,7 +36,7 @@ public class Slider : MonoBehaviour
         if (!isSliding) return;
         float distCovered = (Time.time - startTime) * speed;
         float fractionOfJourney = distCovered / journeyLength;
-        print(_updateCount + " - Fraction of journey:" + fractionOfJourney);
+        //print(_updateCount + " - Fraction of journey:" + fractionOfJourney);
         transform.position = Vector3.Lerp(fromPoint, toPoint, fractionOfJourney);
         if (fractionOfJourney >= 1) {
             isSliding = false;

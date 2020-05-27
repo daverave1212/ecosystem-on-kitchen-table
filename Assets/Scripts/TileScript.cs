@@ -33,9 +33,12 @@ public class TileScript : MonoBehaviour
     bool goingDown = true;
 
     public bool HasAnimal() { return animalOn != null; }
+    public bool HasRabbit() { return HasAnimal() && animalOn.name == "Bunny";}
+    public bool HasFox() { return HasAnimal() && animalOn.name == "Fox";}
     public bool HasPlant() { return plantOn != null; }
     public bool HasTree() { return tree != null; }
     public bool IsOccupied() { return type == "water" || HasAnimal() || HasPlant() || HasTree(); }
+    public bool IsFree() { return !IsOccupied(); }
     public void SpawnPlant() {
         var plantPrefab = PlaneScript.self.plantPrefab;
         plantOn = Instantiate(plantPrefab);
@@ -43,13 +46,30 @@ public class TileScript : MonoBehaviour
         plantOn.transform.position = this.transform.position;
     }
 
-    // TODO
+    
+    public TileScript GetLeftTile()  { return PlaneScript.GetTileScript(row, col - 1); }
+    public TileScript GetDownTile()  { return PlaneScript.GetTileScript(row, col + 1); }
+    public TileScript GetRightTile() { return PlaneScript.GetTileScript(row + 1, col); }
+    public TileScript GetUpTile()    { return PlaneScript.GetTileScript(row - 1, col); }
+
     public TileScript GetAdjacentTile(int direction) {  // direction = AnimalScript.UP or DOWN or etc
-        if (direction == AnimalScript.UP) return PlaneScript.GetTile(row - 1, col).GetComponent<TileScript>();
-        if (direction == AnimalScript.RIGHT) return PlaneScript.GetTile(row, col + 1).GetComponent<TileScript>();
-        if (direction == AnimalScript.DOWN) return PlaneScript.GetTile(row - 1, col).GetComponent<TileScript>();
-        if (direction == AnimalScript.LEFT) return PlaneScript.GetTile(row, col - 1).GetComponent<TileScript>();
+        if (direction == K.UP)      return GetUpTile();
+        if (direction == K.RIGHT)   return GetRightTile();
+        if (direction == K.DOWN)    return GetDownTile();
+        if (direction == K.LEFT)    return GetLeftTile();
         return this;
+    }
+    public TileScript[] GetAdjacentTiles() {
+        var up    = GetUpTile();
+        var right = GetRightTile();
+        var down  = GetDownTile();
+        var left  = GetLeftTile();
+        List<TileScript> adjacentTiles = new List<TileScript>();
+        if (up != null)    adjacentTiles.Add(up);
+        if (right != null) adjacentTiles.Add(right);
+        if (down != null)  adjacentTiles.Add(down);
+        if (left != null)  adjacentTiles.Add(left);
+        return adjacentTiles.ToArray();
     }
 
     const float DEFAULT_VAL = -420.1337f;
@@ -127,5 +147,24 @@ public class TileScript : MonoBehaviour
 
     public void SetMaterial(Material material) {
         GetComponent<Renderer>().material = material;
+    }
+
+    public int GetDirectionToAdjacentTile(TileScript adjacentTile) {
+        if (adjacentTile == null) return K.NONE;
+        var up    = GetUpTile();
+        var right = GetRightTile();
+        var down  = GetDownTile();
+        var left  = GetLeftTile();
+        if (adjacentTile == up)     return K.UP;
+        if (adjacentTile == right)  return K.RIGHT;
+        if (adjacentTile == down)   return K.DOWN;
+        if (adjacentTile == left)   return K.LEFT;
+        throw new System.Exception($"Error for tile ({row}, {col}): adjacentTile ({adjacentTile.row}, {adjacentTile.col}) given to GetDirectionToAdjacentTile is not adjacent!");
+    }
+
+    public void KillPlant() {
+        if (HasPlant()) {
+            Destroy(plantOn);
+        }
     }
 }

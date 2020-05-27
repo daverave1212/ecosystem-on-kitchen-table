@@ -17,10 +17,7 @@ public class PlaneScript : MonoBehaviour
 
     public GameObject rabbitPrefab;
 
-    public static float TILE_SIZE_X = 1.0f;
-    public static float TILE_SIZE_Y = 0.25f;
-    public static float TILE_SIZE_Z = 1.0f;
-    public static float ANIMAL_FEET_HEIGHT = 0.25f;
+
 
     public static PlaneScript self;
 
@@ -28,7 +25,7 @@ public class PlaneScript : MonoBehaviour
     const int nTilesCols = 32;
     const int nTrees = 20;
     const int nInitialPlants = 10;
-    const int nInitialRabbits = 1;
+    const int nInitialRabbits = 4;
 
     public static string[,] terrainMatrix;
     public static GameObject[,] tiles;
@@ -40,12 +37,17 @@ public class PlaneScript : MonoBehaviour
         if (tileExists(i, j)) return tiles[i, j];
         else return null;
     }
+    public static TileScript GetTileScript(int i, int j) {
+        if (tileExists(i, j)) return tiles[i, j].GetComponent<TileScript>();
+        else return null;
+    }
+
 
     void SpawnTiles() {
         MapGeneration mapGenerator = new MapGeneration();
         terrainMatrix = mapGenerator.Generate(nTilesRows, 3, 3, 50, nTrees);
-        float totalWidth = nTilesRows * TILE_SIZE_X;
-        float totalHeight = nTilesCols * TILE_SIZE_Z;
+        float totalWidth = nTilesRows * K.TILE_SIZE_X;
+        float totalHeight = nTilesCols * K.TILE_SIZE_Z;
         float topMostPoint = 0 - totalHeight / 2;
         float leftMostPoint = 0 - totalWidth / 2;
         tiles = new GameObject[nTilesRows, nTilesCols];
@@ -53,9 +55,9 @@ public class PlaneScript : MonoBehaviour
         for (int row = 0; row<nTilesRows; row++) {
             for (int col = 0; col<nTilesCols; col++) {
                 var newTile = Instantiate(tilePrefab);
-                var x = leftMostPoint + col * TILE_SIZE_X;
-                var y = TILE_SIZE_Y / 2;
-                var z = topMostPoint + row * TILE_SIZE_Z;
+                var x = leftMostPoint + col * K.TILE_SIZE_X;
+                var y = K.TILE_SIZE_Y / 2;
+                var z = topMostPoint + row * K.TILE_SIZE_Z;
                 var type = terrainMatrix[row, col];
                 newTile.tag = "Tile";
                 newTile.GetComponent<TileScript>().Initialize(x, y, z, row, col, type);
@@ -65,6 +67,7 @@ public class PlaneScript : MonoBehaviour
     }
 
     void SpawnStartingPlants() {
+        var k = new K();
         print("Spawning plants");
         bool trySpawnOneRandomPlant() {
             var rRow = Random.Range(0, nTilesRows);
