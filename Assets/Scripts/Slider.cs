@@ -22,10 +22,6 @@ public class Slider : MonoBehaviour
     public void SlideTo(Vector3 to, System.Action<int> callback) {
         fromPoint = gameObject.transform.position;
         toPoint = to;
-        print("Starting to slide from:");
-        print(fromPoint);
-        print("To");
-        print(toPoint);
         startTime = Time.time;
         journeyLength = 1.0f;
         isSliding = true;

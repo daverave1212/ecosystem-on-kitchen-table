@@ -17,6 +17,12 @@ public class PlaneScript : MonoBehaviour
 
     public GameObject rabbitPrefab;
 
+    public GameObject leavesPrefab;
+    public float leavesRotation = -90;
+    public List<GameObject> allLeaves;
+    public GameObject windPrefab;
+    public GameObject wind;
+
 
 
     public static PlaneScript self;
@@ -42,8 +48,20 @@ public class PlaneScript : MonoBehaviour
         else return null;
     }
 
-
-    void SpawnTiles() {
+    void AdjustWind() {
+        leavesRotation = UnityEngine.Random.Range(0, 360);
+        wind.transform.eulerAngles = new Vector3(0, leavesRotation, 0);
+        foreach (var leaf in allLeaves) {
+            leaf.transform.eulerAngles = new Vector3(0, leavesRotation, 0);
+        }
+    }
+    void SpawnTiles() {        
+        allLeaves = new List<GameObject>();
+        leavesRotation = UnityEngine.Random.Range(0, 360);
+        wind = Instantiate(windPrefab);
+        wind.transform.position = new Vector3(transform.position.x, K.LEAVES_HEIGHT, transform.position.z);
+        wind.transform.eulerAngles = new Vector3(0, leavesRotation, 0);
+        InvokeRepeating("AdjustWind", 20f, 20f);
         MapGeneration mapGenerator = new MapGeneration();
         terrainMatrix = mapGenerator.Generate(nTilesRows, 3, 3, 50, nTrees);
         float totalWidth = nTilesRows * K.TILE_SIZE_X;

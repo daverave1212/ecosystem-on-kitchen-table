@@ -5,7 +5,7 @@ using System;
 
 public class AnimalScript : MonoBehaviour
 {
-    public bool _debug = true;
+    public bool _debug = false;
 
 
 
@@ -23,10 +23,10 @@ public class AnimalScript : MonoBehaviour
     public void AddHappiness(int amount) { currentHappiness += amount; }
 
     private void updateTile(TileScript newTile) {
-        if (tileOn != null) tileOn.animalOn = null;
-        if (_debug) tileOn?.SetMaterial(PlaneScript.self._blueMaterial);
+        // if (tileOn != null) tileOn.animalOn = null;
+        // if (_debug) tileOn?.SetMaterial(PlaneScript.self._blueMaterial);
         tileOn = newTile;
-        if (_debug) tileOn?.SetMaterial(PlaneScript.self._magentaMaterial);
+        // if (_debug) tileOn?.SetMaterial(PlaneScript.self._magentaMaterial);
         newTile.animalOn = this;
     }
     

@@ -92,12 +92,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7da95e34ffb8eb142878d0e79d4ea68d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _magentaMaterial: {fileID: 2100000, guid: 9fff8bed91639d94fb6b355f88cbd2b4, type: 2}
-  _blueMaterial: {fileID: 2100000, guid: 99fb926fbd54afe4391d5a4d12368fc1, type: 2}
-  grassMaterial: {fileID: 2100000, guid: 7a7adb8638936d04686a407423afed0f, type: 2}
+  grassMaterial: {fileID: 2100000, guid: ff877304ec6ab8d4ba4c9b6a346c5775, type: 2}
   waterMaterial: {fileID: 2100000, guid: 1bb29289bce37d745a90911418317a4f, type: 2}
   sandMaterial: {fileID: 2100000, guid: daad5fd4aafebf14dac83456b1e588a5, type: 2}
-  treePrefab: {fileID: 114418, guid: 8b2d47fdc2e25ac4f9721480a68bbefa, type: 3}
+  treePrefab: {fileID: 188972, guid: 7641c7e8354e2c44cab6432d9d2c6d1b, type: 3}
   type: grass
   row: 0
   col: 0

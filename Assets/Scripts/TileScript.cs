@@ -91,8 +91,13 @@ public class TileScript : MonoBehaviour
             tree.tag = "Plant";
             tree.transform.position = new Vector3(x, y, z);
             var theRotation = UnityEngine.Random.Range(0, 360);
-            //tree.transform.rotation = Quaternion.EulerAngles(0, theRotation, 0);
             tree.transform.eulerAngles = new Vector3(0, theRotation, 0);
+            if (Random.Range(1, 3) == 1) {
+                var leaves = Instantiate(PlaneScript.self.leavesPrefab);
+                PlaneScript.self.allLeaves.Add(leaves);
+                leaves.transform.position = new Vector3(x, y + K.LEAVES_HEIGHT, z);
+                leaves.transform.eulerAngles = new Vector3(0, PlaneScript.self.leavesRotation, 0);
+            }
         }
         this.type = type;
         gameObject.transform.position = new Vector3(x, y, z);
@@ -102,16 +107,16 @@ public class TileScript : MonoBehaviour
             gameObject.transform.position += new Vector3(0, yOffset / 2, 0);
             if (Random.Range(1, 3) == 1) {
                 grassOn = Instantiate(PlaneScript.self.grassPrefab);
-                grassOn.tag = "Plant";
-                grassOn.transform.position = transform.position;
-                var theRotation = UnityEngine.Random.Range(0, 360);
+                grassOn.transform.position = new Vector3(transform.position.x, transform.position.y + K.ANIMAL_FEET_HEIGHT, transform.position.z);
+                //grassOn.transform.eulerAngles = new Vector3(0, theRotation, 0);
+                float theRotation = UnityEngine.Random.Range(0, 360);
                 grassOn.transform.eulerAngles = new Vector3(0, theRotation, 0);
             }
             if (Random.Range(1, 5) == 1) {
                 flowersOn = Instantiate(PlaneScript.self.flowersPrefab);
                 flowersOn.tag = "Plant";
-                flowersOn.transform.position = transform.position;
-                var theRotation = UnityEngine.Random.Range(0, 360);
+                flowersOn.transform.position = new Vector3(transform.position.x, transform.position.y + K.ANIMAL_FEET_HEIGHT, transform.position.z);
+                float theRotation = UnityEngine.Random.Range(0, 360);
                 flowersOn.transform.eulerAngles = new Vector3(0, theRotation, 0);
             }
         }
