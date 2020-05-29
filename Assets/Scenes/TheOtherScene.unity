@@ -290,7 +290,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2073713294}
   m_LocalRotation: {x: 0.38097274, y: -0.4268435, z: 0.20482244, w: 0.79417396}
-  m_LocalPosition: {x: 32.057495, y: 27.239422, z: -21.117672}
+  m_LocalPosition: {x: 24.08, y: 16.94, z: -14.37}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -373,6 +373,24 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1982818248052987149, guid: a34338deadd3f68489bcdedd262a7e03,
+        type: 3}
+      propertyPath: grassPrefab
+      value: 
+      objectReference: {fileID: 4837692783882711219, guid: dc7bfd30754539043ac7bc535dcb9973,
+        type: 3}
+    - target: {fileID: 1982818248052987149, guid: a34338deadd3f68489bcdedd262a7e03,
+        type: 3}
+      propertyPath: leavesPrefab
+      value: 
+      objectReference: {fileID: 2196934909733176958, guid: b1d40a9276c59fd41b02d6508b4cd599,
+        type: 3}
+    - target: {fileID: 1982818248052987149, guid: a34338deadd3f68489bcdedd262a7e03,
+        type: 3}
+      propertyPath: windPrefab
+      value: 
+      objectReference: {fileID: 8227075748500351013, guid: 4fa791f3190294441afebaf4869794b0,
+        type: 3}
     - target: {fileID: 1982818248052987150, guid: a34338deadd3f68489bcdedd262a7e03,
         type: 3}
       propertyPath: m_Name
