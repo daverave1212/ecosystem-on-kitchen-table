@@ -15,23 +15,30 @@ public class AnimalScript : MonoBehaviour
     public int maxHunger = 100;
     public int currentHunger = 50;  // == maxHunger means it is perfectly saturated
     public int maxHappiness = 100;
-    public int currentHappiness = 25;   // == maxHappiness means it will make babies!
+    public int currentHappiness = 100;   // == maxHappiness means it will make babies!
     public float size = 1;
     public TileScript tileOn;
+
+    public AnimalScript myMate = null;
+    public bool isMeetingMate = false;          // When an animal wants to mate and another one is available, they will meet in the middle
+    public TileScript mateMeetingTile = null;
+    public bool makesFirstStep = false;
 
     public void AddHunger(int amount) { currentHunger = Math.Min(currentHunger + amount, maxHunger); }
     public void AddHappiness(int amount) { currentHappiness += amount; }
 
     private void updateTile(TileScript newTile) {
-        // if (tileOn != null) tileOn.animalOn = null;
-        // if (_debug) tileOn?.SetMaterial(PlaneScript.self._blueMaterial);
+        if (tileOn != null) tileOn.animalOn = null;
         tileOn = newTile;
-        // if (_debug) tileOn?.SetMaterial(PlaneScript.self._magentaMaterial);
         newTile.animalOn = this;
     }
     
 
-    public bool IsHungry() { return currentHunger <= maxHunger / 2; }
+    public bool IsHungry() {
+        //print($"currentHunger={currentHunger} < ${maxHunger / 2}");
+        //print(currentHunger < maxHunger / 2);
+        return currentHunger < maxHunger / 2;
+    }
     public bool IsReadyToMate() { return currentHappiness >= maxHappiness; }
     public Vector2Int GetPositionInMatrix() {
         return new Vector2Int(tileOn.row, tileOn.col);
@@ -64,7 +71,6 @@ public class AnimalScript : MonoBehaviour
         transform.LookAt(to);
         GetComponent<Animator>().Play("Run");
         GetComponent<Slider>().SlideTo(to, delegate (int param) {
-            print("Done moving");
             //GetComponent<Animator>().Play("Idle");
         });
 
@@ -75,6 +81,7 @@ public class AnimalScript : MonoBehaviour
         
     }
     public void MoveToTile(TileScript tile) {
+        if (tile == tileOn) return;
         updateTile(tile);
         var to = new Vector3(tile.transform.position.x, transform.position.y, tile.transform.position.z);
         MoveToPosition(to);
@@ -139,10 +146,15 @@ public class AnimalScript : MonoBehaviour
         var adjacentTiles = tileOn.GetAdjacentTiles();
         foreach (var tile in adjacentTiles) {
             if (tile.HasRabbit()) {
+                print($"Tile {tile.row}, {tile.col} definitely has a rabbit.");
                 return tile.animalOn;
             }
         }
         return null;
+    }
+
+    public void LookAtAnimal(AnimalScript animal) {
+        gameObject.transform.LookAt(animal.transform);
     }
 
     

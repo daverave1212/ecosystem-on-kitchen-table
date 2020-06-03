@@ -391,6 +391,36 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8227075748500351013, guid: 4fa791f3190294441afebaf4869794b0,
         type: 3}
+    - target: {fileID: 1982818248052987149, guid: a34338deadd3f68489bcdedd262a7e03,
+        type: 3}
+      propertyPath: _tileIndicatorPrefab
+      value: 
+      objectReference: {fileID: 2212239149946205643, guid: 640ce3df9e81bc449b550dd64ce9cc60,
+        type: 3}
+    - target: {fileID: 1982818248052987149, guid: a34338deadd3f68489bcdedd262a7e03,
+        type: 3}
+      propertyPath: _tileIndicatorRedPrefab
+      value: 
+      objectReference: {fileID: 2088936221055849581, guid: 868c678ae6e295149b17dc3682e05a0c,
+        type: 3}
+    - target: {fileID: 1982818248052987149, guid: a34338deadd3f68489bcdedd262a7e03,
+        type: 3}
+      propertyPath: _tileIndicatorYellowPrefab
+      value: 
+      objectReference: {fileID: 276176946688659794, guid: 8771604abdcfbcf42a0a95edc54d0192,
+        type: 3}
+    - target: {fileID: 1982818248052987149, guid: a34338deadd3f68489bcdedd262a7e03,
+        type: 3}
+      propertyPath: carrotParticlesPrefab
+      value: 
+      objectReference: {fileID: 8709585916592207015, guid: 685a43a7e1bc15d4792a8860b11a954f,
+        type: 3}
+    - target: {fileID: 1982818248052987149, guid: a34338deadd3f68489bcdedd262a7e03,
+        type: 3}
+      propertyPath: heartParticlesPrefab
+      value: 
+      objectReference: {fileID: 5139542748144510561, guid: d8e79435b326af849a86c69a0e2684a9,
+        type: 3}
     - target: {fileID: 1982818248052987150, guid: a34338deadd3f68489bcdedd262a7e03,
         type: 3}
       propertyPath: m_Name

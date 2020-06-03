@@ -542,11 +542,14 @@ MonoBehaviour:
   speed: 2
   isFemale: 0
   maxHunger: 100
-  currentHunger: 50
+  currentHunger: 100
   maxHappiness: 100
-  currentHappiness: 25
+  currentHappiness: 100
   size: 1
   tileOn: {fileID: 0}
+  isMeetingMate: 0
+  mateMeetingTile: {fileID: 0}
+  _id: 0
 --- !u!114 &-5041864890149990439
 MonoBehaviour:
   m_ObjectHideFlags: 0

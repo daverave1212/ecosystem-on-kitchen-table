@@ -169,7 +169,22 @@ public class TileScript : MonoBehaviour
 
     public void KillPlant() {
         if (HasPlant()) {
+            var particles = Instantiate(PlaneScript.self.carrotParticlesPrefab);    // It will autodestruct because it has a script, no worries
+            particles.transform.position = plantOn.transform.position + new Vector3(0, 2, 0);
             Destroy(plantOn);
         }
+    }
+
+    public void _MarkBlue() {
+        var indicator = Instantiate(PlaneScript.self._tileIndicatorPrefab);
+        indicator.transform.position = gameObject.transform.position;
+    }
+    public void _MarkRed() {
+        var indicator = Instantiate(PlaneScript.self._tileIndicatorRedPrefab);
+        indicator.transform.position = gameObject.transform.position;
+    }
+    public void _MarkYellow() {
+        var indicator = Instantiate(PlaneScript.self._tileIndicatorYellowPrefab);
+        indicator.transform.position = gameObject.transform.position;
     }
 }

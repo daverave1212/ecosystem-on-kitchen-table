@@ -6,7 +6,9 @@ using UnityEngine;
 public class PlaneScript : MonoBehaviour
 {
 
-    public Material _magentaMaterial;
+    public GameObject _tileIndicatorPrefab;
+    public GameObject _tileIndicatorRedPrefab;
+    public GameObject _tileIndicatorYellowPrefab;
     public Material _blueMaterial;
 
     // Drag and drop the prefabs / materials here in Unity
@@ -22,8 +24,9 @@ public class PlaneScript : MonoBehaviour
     public List<GameObject> allLeaves;
     public GameObject windPrefab;
     public GameObject wind;
-
-
+    public GameObject carrotParticlesPrefab;
+    
+    public GameObject heartParticlesPrefab;
 
     public static PlaneScript self;
 
@@ -31,7 +34,7 @@ public class PlaneScript : MonoBehaviour
     const int nTilesCols = 32;
     const int nTrees = 20;
     const int nInitialPlants = 10;
-    const int nInitialRabbits = 4;
+    const int nInitialRabbits = 2;
 
     public static string[,] terrainMatrix;
     public static GameObject[,] tiles;
@@ -100,17 +103,17 @@ public class PlaneScript : MonoBehaviour
             for (int i = 1; i<=times; i++) {
                 spawnedRandomPlant = trySpawnOneRandomPlant();
                 if (spawnedRandomPlant) {
-                    print("Spawned one plant successfully!");
                     return;
                 }
             }
-            print("Failed to spawn a plant");
+            // Failed to spawn one plant
         }
         for (var i = 1; i<nInitialPlants; i++) {
             trySpawnNTimes(5);
         }
     }
 
+    int _nRabbits = 0;
     void SpawnStartingRabbits() {
         bool trySpawnOneRabbit() {
             var rRow = Random.Range(0, nTilesRows);
@@ -118,6 +121,8 @@ public class PlaneScript : MonoBehaviour
             var theTile = tiles[rRow, rCol].GetComponent<TileScript>();
             if (theTile.IsOccupied()) return false;
             var theRabbit = Instantiate(rabbitPrefab);
+            _nRabbits ++;
+            theRabbit.GetComponent<RabbitScript>()._id = _nRabbits;
             theRabbit.tag = "Animal";
             theRabbit.GetComponent<RabbitScript>().PutOnTile(theTile);
             return true;
@@ -127,7 +132,6 @@ public class PlaneScript : MonoBehaviour
             for (int i = 1; i<=times; i++) {
                 spawnedRandomRabbit = trySpawnOneRabbit();
                 if (spawnedRandomRabbit) {
-                    print("Spawned one rabbit successfully!");
                     return;
                 }
             }

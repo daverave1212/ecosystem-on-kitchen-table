@@ -25,8 +25,10 @@ public class K : MonoBehaviour
     public static string[] moodToString = {"NO_MOOD", "EAT", "MATE", "RUN"};
     public static string[] directionToString = {"NONE", "UP", "RIGHT", "DOWN", "LEFT"};
 
-    public static int FIND_RABBIT = 1;
-    public static int FIND_FOX = 2;
-    public static int FIND_PLANT = 3;
+    public static int FIND_MATE_RABBIT = 1;
+    public static int FIND_FOOD_RABBIT = 2;
+    public static int FIND_MATE_FOX = 3;
+    public static int FIND_PLANT = 4;
+    public static int FIND_SPECIFIC_TILE = 5;
 
 }
