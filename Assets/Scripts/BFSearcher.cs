@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class BFSearcher : MonoBehaviour {
     
+    // Usually, finds a path to the given thing and returns the first tile that the animal should take to get there.
+    // But, if 'onlyToMiddle' is given as true, then it returns the tile at the middle of the path to the objective.
     public static TileScript Find(TileScript startTile, int findWhat, bool onlyToMiddle = false, Action<AnimalScript> foundAnimalCallback = null, TileScript whichSpecificTile = null, Action<TileScript> middleTileCallback = null) {    // Returns the tile to move to to find a plant
         var visited = new HashSet<TileScript>();
         var toVisit = new Queue<TileScript>();

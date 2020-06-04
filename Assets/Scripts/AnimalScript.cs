@@ -8,14 +8,14 @@ public class AnimalScript : MonoBehaviour
     public bool _debug = false;
 
 
-
+    public AnimalScript[] parents;
     public string name = "Animal";  // Name of the species
     public float speed = 2;         // Ticks every <speed> seconds
     public bool isFemale = false;
     public int maxHunger = 100;
     public int currentHunger = 50;  // == maxHunger means it is perfectly saturated
     public int maxHappiness = 100;
-    public int currentHappiness = 100;   // == maxHappiness means it will make babies!
+    public int currentHappiness = 50;   // == maxHappiness means it will make babies!
     public float size = 1;
     public TileScript tileOn;
 
@@ -24,36 +24,29 @@ public class AnimalScript : MonoBehaviour
     public TileScript mateMeetingTile = null;
     public bool makesFirstStep = false;
 
-    public void AddHunger(int amount) { currentHunger = Math.Min(currentHunger + amount, maxHunger); }
+    public void AddHunger(int amount) { currentHunger = currentHunger + amount; }
     public void AddHappiness(int amount) { currentHappiness += amount; }
+    public bool IsHungry() { return currentHunger < ((float) maxHunger) * 0.75; }
+    public bool IsReadyToMate() { return currentHappiness >= maxHappiness; }
 
     private void updateTile(TileScript newTile) {
         if (tileOn != null) tileOn.animalOn = null;
         tileOn = newTile;
         newTile.animalOn = this;
     }
-    
 
-    public bool IsHungry() {
-        //print($"currentHunger={currentHunger} < ${maxHunger / 2}");
-        //print(currentHunger < maxHunger / 2);
-        return currentHunger < maxHunger / 2;
-    }
-    public bool IsReadyToMate() { return currentHappiness >= maxHappiness; }
-    public Vector2Int GetPositionInMatrix() {
-        return new Vector2Int(tileOn.row, tileOn.col);
-    }
+    public Vector2Int GetPositionInMatrix() { return new Vector2Int(tileOn.row, tileOn.col); }
 
     public int GetMood() {
-        if (IsHungry()) {
-            print("I is hungry..");
-            return K.EAT;
-        }
         if (IsReadyToMate()) {
             print("I want luv..");
             return K.MATE;
         }
-        AddHappiness(10);
+        if (IsHungry()) {
+            print("I is hungry..");
+            return K.EAT;
+        }
+        AddHappiness(5);
         print("Getting happier...");
         return K.NO_MOOD;
     }
@@ -155,6 +148,27 @@ public class AnimalScript : MonoBehaviour
 
     public void LookAtAnimal(AnimalScript animal) {
         gameObject.transform.LookAt(animal.transform);
+    }
+
+    public TileScript GetRandomAvailableAdjacentTile() {
+        var adjacentTiles = tileOn.GetAdjacentTiles();
+        if (adjacentTiles.Length > 0) {
+            return adjacentTiles[UnityEngine.Random.Range(0, adjacentTiles.Length)];
+        }
+        return null;
+    }
+
+    public int GetRandomAvailableDirection() {
+        var adjacentTiles = tileOn.GetAdjacentTiles();
+        for (int i = 0; i < adjacentTiles.Length; i++) {
+             int rnd = UnityEngine.Random.Range(0, adjacentTiles.Length);
+             var aux = adjacentTiles[rnd];
+             adjacentTiles[rnd] = adjacentTiles[i];
+             adjacentTiles[i] = aux;
+        }
+        foreach (var tile in adjacentTiles)
+            if (tile.IsFree()) return tileOn.GetDirectionToAdjacentTile(tile);
+        return K.NONE;
     }
 
     

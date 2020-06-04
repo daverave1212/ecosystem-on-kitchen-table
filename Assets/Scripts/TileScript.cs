@@ -164,13 +164,15 @@ public class TileScript : MonoBehaviour
         if (adjacentTile == right)  return K.RIGHT;
         if (adjacentTile == down)   return K.DOWN;
         if (adjacentTile == left)   return K.LEFT;
+        var stackTrace = new System.Diagnostics.StackTrace();
+        print(stackTrace);
         throw new System.Exception($"Error for tile ({row}, {col}): adjacentTile ({adjacentTile.row}, {adjacentTile.col}) given to GetDirectionToAdjacentTile is not adjacent!");
     }
 
     public void KillPlant() {
         if (HasPlant()) {
             var particles = Instantiate(PlaneScript.self.carrotParticlesPrefab);    // It will autodestruct because it has a script, no worries
-            particles.transform.position = plantOn.transform.position + new Vector3(0, 2, 0);
+            particles.transform.position = plantOn.transform.position + new Vector3(0, 0.5f, 0);
             Destroy(plantOn);
         }
     }

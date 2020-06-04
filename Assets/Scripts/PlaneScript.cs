@@ -113,6 +113,18 @@ public class PlaneScript : MonoBehaviour
         }
     }
 
+    public static RabbitScript SpawnRabbit(TileScript onWhichTile, RabbitScript[] parents = null) {
+        if (!onWhichTile.IsFree()) throw new System.Exception("Error: Tile to spawn rabbit is not free!");
+        PlaneScript.self._nRabbits ++;
+        var theRabbit = Instantiate(PlaneScript.self.rabbitPrefab);
+        theRabbit.GetComponent<Animator>().Play("Spawn");
+        theRabbit.tag = "Animal";
+        var rabbitScript = theRabbit.GetComponent<RabbitScript>();
+        rabbitScript.PutOnTile(onWhichTile);
+        rabbitScript.parents = parents;
+        return rabbitScript;
+    }
+
     int _nRabbits = 0;
     void SpawnStartingRabbits() {
         bool trySpawnOneRabbit() {
@@ -120,11 +132,7 @@ public class PlaneScript : MonoBehaviour
             var rCol = Random.Range(0, nTilesCols);
             var theTile = tiles[rRow, rCol].GetComponent<TileScript>();
             if (theTile.IsOccupied()) return false;
-            var theRabbit = Instantiate(rabbitPrefab);
-            _nRabbits ++;
-            theRabbit.GetComponent<RabbitScript>()._id = _nRabbits;
-            theRabbit.tag = "Animal";
-            theRabbit.GetComponent<RabbitScript>().PutOnTile(theTile);
+            SpawnRabbit(theTile);
             return true;
         }
         void trySpawnRabbitNTimes(int times) {
