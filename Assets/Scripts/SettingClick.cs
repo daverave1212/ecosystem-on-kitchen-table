@@ -6,7 +6,7 @@ public class SettingClick : MonoBehaviour
 {
     // Start is called before the first frame update
     public GameObject Panel;
-   public void OpenPanel()
+    public void OpenPanel()
     {
         if(Panel != null)
         {
@@ -20,6 +20,9 @@ public class SettingClick : MonoBehaviour
             }
 
         }
-        
+    }
+
+    public void ToggleWaterAnimation() {
+        TileScript.isWaterAnimated = ! TileScript.isWaterAnimated;
     }
 }

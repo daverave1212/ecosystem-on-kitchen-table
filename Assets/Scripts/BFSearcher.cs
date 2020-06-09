@@ -24,7 +24,7 @@ public class BFSearcher : MonoBehaviour {
         } else if (findWhat == K.FIND_MATE_FOX)
             checkFindCondition = delegate(TileScript tileToCheck) { return tileToCheck.HasFox() && tileToCheck.animalOn.IsReadyToMate(); };
         else if (findWhat == K.FIND_FOOD_RABBIT)
-            checkFindCondition = delegate(TileScript tileToCheck) { return tileToCheck.HasFox(); };
+            checkFindCondition = delegate(TileScript tileToCheck) { return tileToCheck.HasRabbit(); };
         else if (findWhat == K.FIND_SPECIFIC_TILE) {
             if (whichSpecificTile == null) {
                 print("ERROR: No specific tile given to BFSearcher.Find");
@@ -58,7 +58,7 @@ public class BFSearcher : MonoBehaviour {
                     print("ERROR: This should not have happened!");
                     return null;
                 } else {
-                    currentTile._MarkYellow();
+                    //currentTile._MarkYellow();
                     if (counter >= tileLimit) return currentTile;
                     if (GetPrevTile(currentTile) == startTile) return currentTile;
                     currentTile = GetPrevTile(currentTile);
@@ -79,7 +79,7 @@ public class BFSearcher : MonoBehaviour {
                     return counter;
                 } else {
                     if (GetPrevTile(currentTile) == startTile) return counter;
-                    currentTile._MarkYellow();
+                    //currentTile._MarkYellow();
                     currentTile = GetPrevTile(currentTile);
                     counter ++;
                 }
@@ -88,7 +88,7 @@ public class BFSearcher : MonoBehaviour {
 
 
         print("Starting at blue.");
-        startTile._MarkBlue();
+        //startTile._MarkBlue();
         visited.Add(startTile);
         toVisit.Enqueue(startTile);
         while (toVisit.Count > 0) {
@@ -99,7 +99,7 @@ public class BFSearcher : MonoBehaviour {
                 SetPrevTile(tile, currentTile);
                 if (checkFindCondition(tile)) {
                     print("Found tile which marks condition: red");
-                    tile._MarkRed();
+                    //tile._MarkRed();
                     if (!onlyToMiddle) {
                         if (tile.HasAnimal() && foundAnimalCallback != null) {
                             print("Calling callback");

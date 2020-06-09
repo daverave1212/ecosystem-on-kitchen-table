@@ -14,6 +14,7 @@ public class TileScript : MonoBehaviour
     public static string GRASS = "grass";
     public static string WATER = "water";
     public static string SAND  = "sand";
+    public static bool isWaterAnimated = true;
 
 
 
@@ -51,6 +52,10 @@ public class TileScript : MonoBehaviour
     public TileScript GetDownTile()  { return PlaneScript.GetTileScript(row, col + 1); }
     public TileScript GetRightTile() { return PlaneScript.GetTileScript(row + 1, col); }
     public TileScript GetUpTile()    { return PlaneScript.GetTileScript(row - 1, col); }
+    public TileScript GetUpLeftTile()  { return PlaneScript.GetTileScript(row - 1, col - 1); }
+    public TileScript GetUpRightTile()  { return PlaneScript.GetTileScript(row - 1, col + 1); }
+    public TileScript GetDownLeftTile()  { return PlaneScript.GetTileScript(row + 1, col - 1); }
+    public TileScript GetDownRightTile()  { return PlaneScript.GetTileScript(row + 1, col + 1); }
 
     public TileScript GetAdjacentTile(int direction) {  // direction = AnimalScript.UP or DOWN or etc
         if (direction == K.UP)      return GetUpTile();
@@ -59,6 +64,7 @@ public class TileScript : MonoBehaviour
         if (direction == K.LEFT)    return GetLeftTile();
         return this;
     }
+
     public TileScript[] GetAdjacentTiles() {
         var up    = GetUpTile();
         var right = GetRightTile();
@@ -70,6 +76,20 @@ public class TileScript : MonoBehaviour
         if (down != null)  adjacentTiles.Add(down);
         if (left != null)  adjacentTiles.Add(left);
         return adjacentTiles.ToArray();
+    }
+
+    public TileScript[] GetAdjacentTilesAndDiagonally() {
+        var upLeft = GetUpLeftTile();
+        var upRight = GetUpRightTile();
+        var downLeft = GetDownLeftTile();
+        var downRight = GetDownRightTile();
+        List<TileScript> diagonalTiles = new List<TileScript>();
+        if (upLeft != null)     diagonalTiles.Add(upLeft);
+        if (upRight != null)    diagonalTiles.Add(upRight);
+        if (downLeft != null)   diagonalTiles.Add(downLeft);
+        if (downRight != null)  diagonalTiles.Add(downRight);
+        diagonalTiles.AddRange(GetAdjacentTiles());
+        return diagonalTiles.ToArray();
     }
 
     const float DEFAULT_VAL = -420.1337f;
@@ -138,6 +158,7 @@ public class TileScript : MonoBehaviour
 
     void Update() {
         if (!isWater) return;
+        if (TileScript.isWaterAnimated == false) return;
         var extraFloat = Time.deltaTime * floatSpeed;
         if (goingDown) {
             transform.position -= new Vector3(0, extraFloat, 0);

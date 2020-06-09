@@ -18,6 +18,7 @@ public class PlaneScript : MonoBehaviour
     public GameObject flowersPrefab;
 
     public GameObject rabbitPrefab;
+    public GameObject foxPrefab;
 
     public GameObject leavesPrefab;
     public float leavesRotation = -90;
@@ -27,17 +28,23 @@ public class PlaneScript : MonoBehaviour
     public GameObject carrotParticlesPrefab;
     
     public GameObject heartParticlesPrefab;
+    public GameObject meatParticlesPrefab;
+    public GameObject skullParticlesPrefab;
 
     public static PlaneScript self;
 
     const int nTilesRows = 32;
     const int nTilesCols = 32;
     const int nTrees = 20;
-    const int nInitialPlants = 10;
-    const int nInitialRabbits = 2;
+    const int nInitialPlants = 16;
+    const int nInitialRabbits = 10;
+    const int nInitialFoxes = 2;
 
     public static string[,] terrainMatrix;
     public static GameObject[,] tiles;
+
+    public static List<RabbitScript> rabbits = new List<RabbitScript>();
+    public static List<FoxScript> foxes = new List<FoxScript>();
 
     public static bool tileExists(int i, int j) {
         return i >= 0 && i < nTilesRows && j >= 0 && j < nTilesCols;
@@ -113,8 +120,9 @@ public class PlaneScript : MonoBehaviour
         }
     }
 
+    int _nRabbits = 0;
     public static RabbitScript SpawnRabbit(TileScript onWhichTile, RabbitScript[] parents = null) {
-        if (!onWhichTile.IsFree()) throw new System.Exception("Error: Tile to spawn rabbit is not free!");
+        if (!onWhichTile.IsFree()) throw new System.Exception($"Error: Tile to spawn rabbit ({onWhichTile.row},{onWhichTile.col}) is not free!");
         PlaneScript.self._nRabbits ++;
         var theRabbit = Instantiate(PlaneScript.self.rabbitPrefab);
         theRabbit.GetComponent<Animator>().Play("Spawn");
@@ -122,10 +130,24 @@ public class PlaneScript : MonoBehaviour
         var rabbitScript = theRabbit.GetComponent<RabbitScript>();
         rabbitScript.PutOnTile(onWhichTile);
         rabbitScript.parents = parents;
+        rabbits.Add(rabbitScript);
         return rabbitScript;
     }
 
-    int _nRabbits = 0;
+    int _nFoxes = 0;
+    public static FoxScript SpawnFox(TileScript onWhichTile, FoxScript[] parents = null) {
+        if (!onWhichTile.IsFree()) throw new System.Exception("Error: Tile to spawn fox is not free!");
+        PlaneScript.self._nFoxes ++;
+        var theFox = Instantiate(PlaneScript.self.foxPrefab);
+        theFox.GetComponent<Animator>().Play("Spawn");
+        theFox.tag = "Animal";
+        var foxScript = theFox.GetComponent<FoxScript>();
+        foxScript.PutOnTile(onWhichTile);
+        foxScript.parents = parents;
+        foxes.Add(foxScript);
+        return foxScript;
+    }
+
     void SpawnStartingRabbits() {
         bool trySpawnOneRabbit() {
             var rRow = Random.Range(0, nTilesRows);
@@ -150,12 +172,42 @@ public class PlaneScript : MonoBehaviour
         }
     }
 
+    void SpawnStartingFoxes() {
+        bool trySpawnOneFox() {
+            var rRow = Random.Range(0, nTilesRows);
+            var rCol = Random.Range(0, nTilesCols);
+            var theTile = tiles[rRow, rCol].GetComponent<TileScript>();
+            if (theTile.IsOccupied()) return false;
+            SpawnFox(theTile);
+            return true;
+        }
+        void trySpawnFoxNTimes(int times) {
+            var spawnedRandomFox= false;
+            for (int i = 1; i<=times; i++) {
+                spawnedRandomFox = trySpawnOneFox();
+                if (spawnedRandomFox) {
+                    return;
+                }
+            }
+            print("Failed to spawn a fox");
+        }
+        for (int i = 1; i<=nInitialFoxes; i++) {
+            trySpawnFoxNTimes(5);
+        }
+    }
+
+    void DropHunger() {
+        foreach (var r in rabbits) { r.AddHunger(-1); }
+        foreach (var f in foxes) { f.AddHunger(-1); }
+    }
+
     // Start is called before the first frame update
     void Start() {
         self = this;
         SpawnTiles();
         SpawnStartingPlants();
         SpawnStartingRabbits();
+        SpawnStartingFoxes();
     }
 
     

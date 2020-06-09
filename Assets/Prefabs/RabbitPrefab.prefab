@@ -571,7 +571,7 @@ MonoBehaviour:
   _debug: 0
   parents: []
   name: Animal
-  speed: 2
+  speed: 1
   isFemale: 0
   maxHunger: 100
   currentHunger: 50
@@ -584,6 +584,7 @@ MonoBehaviour:
   mateMeetingTile: {fileID: 0}
   makesFirstStep: 0
   _id: 0
+  _printsTick: 0
 --- !u!114 &-5041864890149990439
 MonoBehaviour:
   m_ObjectHideFlags: 0
