@@ -8,29 +8,27 @@ using UnityEngine.XR.ARSubsystems;
 
 public class PlacementTarget : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject placementIndicator;
-    
+    [SerializeField] private GameObject placementIndicator;
+
     private Pose _targetPlacement;
 
     [SerializeField] private GameObject whatObject;
-    
-    [SerializeField]
-    private ARRaycastManager raycastManager;
+
+    [SerializeField] private ARRaycastManager raycastManager;
 
     private bool _placementPoseIsValid = false;
 
     private GameObject prefabRef;
-    
+
     private void Update()
-    { 
-      UpdatePlacementPose();
-      UpdatePlacementTarget();
-      
-      if (_placementPoseIsValid && Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
-      {
-          PlaceObject();
-      }
+    {
+        UpdatePlacementPose();
+        UpdatePlacementTarget();
+
+        if (_placementPoseIsValid && Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+        {
+            PlaceObject();
+        }
     }
 
     private void PlaceObject()
@@ -55,6 +53,7 @@ public class PlacementTarget : MonoBehaviour
         generatedItems.AddRange(GameObject.FindGameObjectsWithTag("Plant"));
         generatedItems.AddRange(GameObject.FindGameObjectsWithTag("Tile"));
         generatedItems.AddRange(GameObject.FindGameObjectsWithTag("Animal"));
+        generatedItems.AddRange(GameObject.FindGameObjectsWithTag("Particles"));
         foreach (var generatedItem in generatedItems)
         {
             generatedItem.transform.parent = objectCenter.transform;
@@ -64,16 +63,21 @@ public class PlacementTarget : MonoBehaviour
         prefabRef.transform.localScale = Vector3.zero;
         prefabRef = objectCenter;
     }
-    
+
     private void UpdatePlacementPose()
     {
         if (Camera.current)
         {
             Vector3 screenCenter = Camera.current.ViewportToScreenPoint(new Vector3(0.5f, 0.5f));
             List<ARRaycastHit> hits = new List<ARRaycastHit>();
-            raycastManager.Raycast(screenCenter, hits, TrackableType.Planes);
+            raycastManager.Raycast(screenCenter, hits, TrackableType.FeaturePoint);
 
-            _placementPoseIsValid = hits.Count > 0;
+            RaycastHit physicsHit;
+            Physics.Raycast(Camera.current.transform.position, Camera.current.transform.forward, out physicsHit,
+                Mathf.Infinity);
+
+            
+            _placementPoseIsValid = hits.Count > 0 && physicsHit.collider == null;
             if (_placementPoseIsValid)
             {
                 _targetPlacement = hits[0].pose;
@@ -92,6 +96,5 @@ public class PlacementTarget : MonoBehaviour
         {
             placementIndicator.SetActive(false);
         }
-
     }
 }

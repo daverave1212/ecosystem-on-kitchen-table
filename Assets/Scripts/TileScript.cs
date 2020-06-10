@@ -114,6 +114,7 @@ public class TileScript : MonoBehaviour
             tree.transform.eulerAngles = new Vector3(0, theRotation, 0);
             if (Random.Range(1, 3) == 1) {
                 var leaves = Instantiate(PlaneScript.self.leavesPrefab);
+                leaves.tag = "Particles";
                 PlaneScript.self.allLeaves.Add(leaves);
                 leaves.transform.position = new Vector3(x, y + K.LEAVES_HEIGHT, z);
                 leaves.transform.eulerAngles = new Vector3(0, PlaneScript.self.leavesRotation, 0);
@@ -127,6 +128,7 @@ public class TileScript : MonoBehaviour
             gameObject.transform.position += new Vector3(0, yOffset / 2, 0);
             if (Random.Range(1, 3) == 1) {
                 grassOn = Instantiate(PlaneScript.self.grassPrefab);
+                grassOn.tag = "Plant";
                 grassOn.transform.position = new Vector3(transform.position.x, transform.position.y + K.ANIMAL_FEET_HEIGHT, transform.position.z);
                 //grassOn.transform.eulerAngles = new Vector3(0, theRotation, 0);
                 float theRotation = UnityEngine.Random.Range(0, 360);
