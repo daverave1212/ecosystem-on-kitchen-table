@@ -29,6 +29,23 @@ public class AnimalScript : MonoBehaviour
     public bool IsHungry() { return currentHunger < ((float) maxHunger) * 0.75; }
     public bool IsReadyToMate() { return currentHappiness >= maxHappiness; }
 
+    protected int mateFindType;
+
+    protected void Initialize(string n) {
+        name = n;
+        GetComponent<Animator>().Play("Idle");
+        InvokeRepeating("Tick", speed, speed);
+    }
+
+    public void Tick() {
+        if (currentHunger <= 0) {
+            Kill();
+        }
+        var mood = GetMood();
+        var direction = FindPath(mood);
+        MoveInDirection(direction);
+    }
+
     public void Kill() {
         if (tileOn != null) tileOn.animalOn = null;
         if (isMeetingMate && myMate != null) {
@@ -37,16 +54,10 @@ public class AnimalScript : MonoBehaviour
             myMate.makesFirstStep = false;
             myMate.mateMeetingTile = null;
         }
-        if (name == "Bunny") {
-            PlaneScript.rabbits.Remove((RabbitScript) this);
-        } else if (name == "Fox") {
-            PlaneScript.foxes.Remove((FoxScript) this);
-        } else {
-            throw new Exception($"Error killing animal with name {name}; No such animal type exists.");
-        }
         var theTile = tileOn;
         SpawnSkullParticles();
         Destroy(gameObject);
+        Destruct();
         theTile.SpawnPlant();
     }
 
@@ -56,7 +67,7 @@ public class AnimalScript : MonoBehaviour
     }
 
     public void SpawnMeatParticles() {
-        var particles = Instantiate(PlaneScript.self.meatParticlesPrefab);    // It will autodestruct because it has a script, no worries
+        var particles = Instantiate(Prefabs.self.meatParticlesPrefab);    // It will autodestruct because it has a script, no worries
         particles.transform.position = new Vector3(
             gameObject.transform.position.x,
             gameObject.transform.position.y + K.ANIMAL_FEET_HEIGHT,
@@ -65,7 +76,7 @@ public class AnimalScript : MonoBehaviour
     }
 
     public void SpawnSkullParticles() {
-        var particles = Instantiate(PlaneScript.self.skullParticlesPrefab);    // It will autodestruct because it has a script, no worries
+        var particles = Instantiate(Prefabs.self.skullParticlesPrefab);    // It will autodestruct because it has a script, no worries
         particles.transform.position = new Vector3(
             gameObject.transform.position.x,
             gameObject.transform.position.y + K.ANIMAL_FEET_HEIGHT,
@@ -82,7 +93,7 @@ public class AnimalScript : MonoBehaviour
     public Vector2Int GetPositionInMatrix() { return new Vector2Int(tileOn.row, tileOn.col); }
 
     public int GetMood() {
-        if (IsReadyToMate()) {
+        if (IsReadyToMate() && !IsHungry()) {
             return K.MATE;
         }
         if (IsHungry()) {
@@ -93,13 +104,33 @@ public class AnimalScript : MonoBehaviour
     }
 
 
-    // Override these two functions
-    public void Tick() { print("Animal tick not overriden!!!"); }
-    public int FindPath() {
-        print("FindPath not overriden!!");
-        return K.NONE;
-    }
+    // Override these functions
+    public virtual void Destruct() { throw new Exception("Destruct not overridden!!!"); }
+    public virtual int FindPath(int mood) { throw new Exception("FindPath not overridden!!"); }
+    protected virtual AnimalScript SpawnBaby(TileScript spawnBabyOnWhichTile) { throw new Exception("SpawnBaby not overridden!!"); }
+    protected virtual AnimalScript GetAdjacentMate() { throw new Exception("GetAdjacentMate not overridden!!"); }
 
+    protected int TryMate() {
+        var nearbyMate = GetAdjacentMate();
+        if (nearbyMate != null && nearbyMate == myMate) {
+            LookAtAnimal(myMate);
+            SpawnLoveParticles();
+            if (makesFirstStep) {
+                var babyTile = GetRandomAvailableAdjacentTile();
+                if (babyTile != null) {
+                    MakeBabyWithMyMateAndClear(babyTile);
+                    return K.NONE;
+                }
+            }
+            return K.NONE;
+        } else {
+            if (isMeetingMate) {
+                return GetDirectionToMeetingTile();
+            } else {
+                return GetDirectionToMeetAMate();
+            }   
+        }
+    }
 
     public void MoveToPosition(Vector3 to) {
         transform.LookAt(to);
@@ -179,46 +210,37 @@ public class AnimalScript : MonoBehaviour
         return false;
     }
 
-    public bool EatAdjacentAndDiagonalRabbitIfNear() {
-        var rabbit = GetAdjacentAndDiagonalRabbit();
-        if (rabbit == null) return false;
-        LookAtAnimal(rabbit);
-        rabbit.Explode();
+    public bool EatAdjacentAndDiagonalAnimalIfNear(string animalName) {
+        var prey = GetAdjacentAndDiagonalAnimal(animalName);
+        if (prey == null) return false;
+        LookAtAnimal(prey);
+        prey.Explode();
         AddHunger(75);
         return true;
     }
 
-    public AnimalScript GetAdjacentRabbit() {   // Gets the first found adjacent rabbit
+    public AnimalScript GetAdjacentAnimal(string animalName) {   // Gets the first found adjacent animal of that type
         var adjacentTiles = tileOn.GetAdjacentTiles();
         foreach (var tile in adjacentTiles) {
-            if (tile.HasRabbit()) {
-                print($"Tile {tile.row}, {tile.col} definitely has a rabbit.");
+            if (tile.HasAnimal(animalName)) {
+                print($"Tile {tile.row}, {tile.col} definitely has a {animalName}.");
                 return tile.animalOn;
             }
         }
         return null;
     }
 
-    public AnimalScript GetAdjacentAndDiagonalRabbit() {   // Gets the first found adjacent rabbit
+    public AnimalScript GetAdjacentAndDiagonalAnimal(string animalName) {   // Gets the first found adjacent animal of that type
         var adjacentTiles = tileOn.GetAdjacentTilesAndDiagonally();
         foreach (var tile in adjacentTiles) {
-            if (tile.HasRabbit()) {
+            if (tile.HasAnimal(animalName)) {
                 return tile.animalOn;
             }
         }
         return null;
     }
 
-    public AnimalScript GetAdjacentFox() {
-        var adjacentTiles = tileOn.GetAdjacentTiles();
-        foreach (var tile in adjacentTiles) {
-            if (tile.HasFox()) {
-                print($"Tile {tile.row}, {tile.col} definitely has a fox.");
-                return tile.animalOn;
-            }
-        }
-        return null;
-    }
+
 
     public void LookAtAnimal(AnimalScript animal) {
         gameObject.transform.LookAt(animal.transform);
@@ -246,7 +268,7 @@ public class AnimalScript : MonoBehaviour
     }
 
     public void SpawnLoveParticles() {
-        var particles = Instantiate(PlaneScript.self.heartParticlesPrefab);    // It will autodestruct because it has a script, no worries
+        var particles = Instantiate(Prefabs.self.heartParticlesPrefab);    // It will autodestruct because it has a script, no worries
         particles.transform.position = new Vector3(
             (gameObject.transform.position.x + myMate.transform.position.x) / 2,
             (gameObject.transform.position.y + myMate.transform.position.y) / 2,
@@ -254,14 +276,35 @@ public class AnimalScript : MonoBehaviour
         );
     }
 
+    public int GetDirectionToMeetAMate() {
+        myMate = null;
+        mateMeetingTile = BFSearcher.Find(startTile: tileOn, findWhat: mateFindType, onlyToMiddle: true, foundAnimalCallback: delegate(AnimalScript a) {
+            myMate = a;
+        });
+        if (mateMeetingTile == null)
+            return GetRandomAvailableDirection();
+        isMeetingMate = true;
+        makesFirstStep = true;
+        myMate.isMeetingMate = true;
+        myMate.mateMeetingTile = mateMeetingTile;
+        myMate.makesFirstStep = false;
+        myMate.myMate = this;
+        var directionToMoveTo = tileOn.GetDirectionToAdjacentTile(BFSearcher.Find(tileOn, K.FIND_SPECIFIC_TILE, whichSpecificTile: mateMeetingTile));
+        return directionToMoveTo;
+    }
 
+    public int GetDirectionToMeetingTile() {
+        var directionToMoveTo = tileOn.GetDirectionToAdjacentTile(BFSearcher.Find(tileOn, K.FIND_SPECIFIC_TILE, whichSpecificTile: mateMeetingTile));
+        if (directionToMoveTo == K.NONE && makesFirstStep) {
+            return tileOn.GetDirectionToAdjacentTile(mateMeetingTile);
+        } else {
+            return directionToMoveTo;
+        }
+    }
 
     public void MakeBabyWithMyMateAndClear(TileScript spawnBabyOnWhichTile) {
         AnimalScript ourBaby = null;
-        if (name == "Bunny")
-            ourBaby = PlaneScript.SpawnRabbit(spawnBabyOnWhichTile, new[] {(RabbitScript)this, (RabbitScript)myMate});
-        else if (name == "Fox")
-            ourBaby = PlaneScript.SpawnFox(spawnBabyOnWhichTile, new[] {(FoxScript)this, (FoxScript)myMate});
+        ourBaby = SpawnBaby(spawnBabyOnWhichTile);
         ourBaby.CreateAsOffspring(this, myMate);
         ourBaby.Mutate();
         AddHunger(-25);

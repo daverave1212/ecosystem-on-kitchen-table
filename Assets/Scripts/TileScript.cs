@@ -5,12 +5,6 @@ using UnityEngine;
 public class TileScript : MonoBehaviour
 {
 
-    public Material grassMaterial;
-    public Material waterMaterial;
-    public Material sandMaterial;
-
-    public GameObject treePrefab;
-
     public static string GRASS = "grass";
     public static string WATER = "water";
     public static string SAND  = "sand";
@@ -34,18 +28,12 @@ public class TileScript : MonoBehaviour
     bool goingDown = true;
 
     public bool HasAnimal() { return animalOn != null; }
-    public bool HasRabbit() { return HasAnimal() && animalOn.name == "Bunny";}
-    public bool HasFox() { return HasAnimal() && animalOn.name == "Fox";}
+    public bool HasAnimal(string animalName) => HasAnimal() && animalOn.name == animalName;
     public bool HasPlant() { return plantOn != null; }
     public bool HasTree() { return tree != null; }
     public bool IsOccupied() { return type == "water" || HasAnimal() || HasPlant() || HasTree(); }
     public bool IsFree() { return !IsOccupied(); }
-    public void SpawnPlant() {
-        var plantPrefab = PlaneScript.self.plantPrefab;
-        plantOn = Instantiate(plantPrefab);
-        plantOn.tag = "Plant";
-        plantOn.transform.position = this.transform.position;
-    }
+    public void SpawnPlant() { plantOn = Spawner.SpawnPlant(transform.position); }
 
     
     public TileScript GetLeftTile()  { return PlaneScript.GetTileScript(row, col - 1); }
@@ -107,13 +95,13 @@ public class TileScript : MonoBehaviour
         var yOffset = 0.05f;
         if (type == "tree") {
             type = "grass";
-            tree = Instantiate(treePrefab);
+            tree = Instantiate(Prefabs.self.treePrefab);
             tree.tag = "Plant";
             tree.transform.position = new Vector3(x, y, z);
             var theRotation = UnityEngine.Random.Range(0, 360);
             tree.transform.eulerAngles = new Vector3(0, theRotation, 0);
             if (Random.Range(1, 3) == 1) {
-                var leaves = Instantiate(PlaneScript.self.leavesPrefab);
+                var leaves = Instantiate(Prefabs.self.leavesPrefab);
                 leaves.tag = "Particles";
                 PlaneScript.self.allLeaves.Add(leaves);
                 leaves.transform.position = new Vector3(x, y + K.LEAVES_HEIGHT, z);
@@ -122,12 +110,12 @@ public class TileScript : MonoBehaviour
         }
         this.type = type;
         gameObject.transform.position = new Vector3(x, y, z);
-        var material = grassMaterial;
+        var material = Materials.self.grassMaterial;
         if (type == "grass") {
             gameObject.transform.localScale += new Vector3(0, yOffset, 0);
             gameObject.transform.position += new Vector3(0, yOffset / 2, 0);
             if (Random.Range(1, 3) == 1) {
-                grassOn = Instantiate(PlaneScript.self.grassPrefab);
+                grassOn = Instantiate(Prefabs.self.grassPrefab);
                 grassOn.tag = "Plant";
                 grassOn.transform.position = new Vector3(transform.position.x, transform.position.y + K.ANIMAL_FEET_HEIGHT, transform.position.z);
                 //grassOn.transform.eulerAngles = new Vector3(0, theRotation, 0);
@@ -135,7 +123,7 @@ public class TileScript : MonoBehaviour
                 grassOn.transform.eulerAngles = new Vector3(0, theRotation, 0);
             }
             if (Random.Range(1, 5) == 1) {
-                flowersOn = Instantiate(PlaneScript.self.flowersPrefab);
+                flowersOn = Instantiate(Prefabs.self.flowersPrefab);
                 flowersOn.tag = "Plant";
                 flowersOn.transform.position = new Vector3(transform.position.x, transform.position.y + K.ANIMAL_FEET_HEIGHT, transform.position.z);
                 float theRotation = UnityEngine.Random.Range(0, 360);
@@ -143,10 +131,10 @@ public class TileScript : MonoBehaviour
             }
         }
         if (type == "sand") {
-            material = sandMaterial;
+            material = Materials.self.sandMaterial;
         }
         if (type == "water") {
-            material = waterMaterial;
+            material = Materials.self.waterMaterial;
             gameObject.transform.localScale -= new Vector3(0, yOffset, 0);
             gameObject.transform.position -= new Vector3(0, yOffset / 2, 0);
             isWater = true;
@@ -194,22 +182,22 @@ public class TileScript : MonoBehaviour
 
     public void KillPlant() {
         if (HasPlant()) {
-            var particles = Instantiate(PlaneScript.self.carrotParticlesPrefab);    // It will autodestruct because it has a script, no worries
+            var particles = Instantiate(Prefabs.self.carrotParticlesPrefab);    // It will autodestruct because it has a script, no worries
             particles.transform.position = plantOn.transform.position + new Vector3(0, 0.5f, 0);
             Destroy(plantOn);
         }
     }
 
     public void _MarkBlue() {
-        var indicator = Instantiate(PlaneScript.self._tileIndicatorPrefab);
+        var indicator = Instantiate(Prefabs.self._tileIndicatorPrefab);
         indicator.transform.position = gameObject.transform.position;
     }
     public void _MarkRed() {
-        var indicator = Instantiate(PlaneScript.self._tileIndicatorRedPrefab);
+        var indicator = Instantiate(Prefabs.self._tileIndicatorRedPrefab);
         indicator.transform.position = gameObject.transform.position;
     }
     public void _MarkYellow() {
-        var indicator = Instantiate(PlaneScript.self._tileIndicatorYellowPrefab);
+        var indicator = Instantiate(Prefabs.self._tileIndicatorYellowPrefab);
         indicator.transform.position = gameObject.transform.position;
     }
 }

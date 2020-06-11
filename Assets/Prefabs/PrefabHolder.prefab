@@ -1,0 +1,75 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6176225733789682685
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6176225733789682682}
+  - component: {fileID: 6176225733789682683}
+  m_Layer: 0
+  m_Name: PrefabHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6176225733789682682
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6176225733789682685}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6176225733789682683
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6176225733789682685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 511f09ce0ed9bc040a1bbede82dffbc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  treePrefab: {fileID: 188972, guid: 7641c7e8354e2c44cab6432d9d2c6d1b, type: 3}
+  _tileIndicatorPrefab: {fileID: 2212239149946205643, guid: 640ce3df9e81bc449b550dd64ce9cc60,
+    type: 3}
+  _tileIndicatorRedPrefab: {fileID: 2088936221055849581, guid: 868c678ae6e295149b17dc3682e05a0c,
+    type: 3}
+  _tileIndicatorYellowPrefab: {fileID: 276176946688659794, guid: 8771604abdcfbcf42a0a95edc54d0192,
+    type: 3}
+  tilePrefab: {fileID: 7077848569270701202, guid: f04483dc72c1b3044af3855e5b42c835,
+    type: 3}
+  plantPrefab: {fileID: 7369437224926195636, guid: 944f84e513ee939428a93ba67f8561a8,
+    type: 3}
+  grassPrefab: {fileID: 4837692783882711219, guid: dc7bfd30754539043ac7bc535dcb9973,
+    type: 3}
+  flowersPrefab: {fileID: 6118149239184955027, guid: a0f81977397df2345862ac9e3bd45128,
+    type: 3}
+  rabbitPrefab: {fileID: 4717515717027632093, guid: 6909fa2b281518e4191c73a4b21234de,
+    type: 3}
+  foxPrefab: {fileID: 1553991042791506, guid: d2edcf95960b81249bf3f4a30ad1a908, type: 3}
+  leavesPrefab: {fileID: 2196934909733176958, guid: b1d40a9276c59fd41b02d6508b4cd599,
+    type: 3}
+  windPrefab: {fileID: 8227075748500351013, guid: 4fa791f3190294441afebaf4869794b0,
+    type: 3}
+  carrotParticlesPrefab: {fileID: 8709585916592207015, guid: 685a43a7e1bc15d4792a8860b11a954f,
+    type: 3}
+  heartParticlesPrefab: {fileID: 5139542748144510561, guid: d8e79435b326af849a86c69a0e2684a9,
+    type: 3}
+  meatParticlesPrefab: {fileID: 2902143374752694442, guid: c2dfb52fd051d2e4089c9bc27034aec3,
+    type: 3}
+  skullParticlesPrefab: {fileID: 4155989759069988831, guid: aafdd9168c835524a8b6a16855092bc5,
+    type: 3}
