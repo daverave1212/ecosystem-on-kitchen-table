@@ -70,7 +70,7 @@ public class PlacementTarget : MonoBehaviour
         {
             Vector3 screenCenter = Camera.current.ViewportToScreenPoint(new Vector3(0.5f, 0.5f));
             List<ARRaycastHit> hits = new List<ARRaycastHit>();
-            raycastManager.Raycast(screenCenter, hits, TrackableType.FeaturePoint);
+            raycastManager.Raycast(screenCenter, hits, TrackableType.Planes);
 
             RaycastHit physicsHit;
             Physics.Raycast(Camera.current.transform.position, Camera.current.transform.forward, out physicsHit,
