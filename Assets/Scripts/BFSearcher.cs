@@ -18,13 +18,13 @@ public class BFSearcher : MonoBehaviour {
         else if (findWhat == K.FIND_MATE_RABBIT) {
             print("Delegating correctly.");
             checkFindCondition = delegate(TileScript tileToCheck) {
-                if (tileToCheck.HasRabbit()) print($"Tile {tileToCheck.row}, {tileToCheck.col} definitely has a rabbit");
-                return tileToCheck.HasRabbit() && tileToCheck.animalOn.IsReadyToMate();
+                if (tileToCheck.HasAnimal("Bunny")) print($"Tile {tileToCheck.row}, {tileToCheck.col} definitely has a rabbit");
+                return tileToCheck.HasAnimal("Bunny") && tileToCheck.animalOn.IsReadyToMate();
             };
         } else if (findWhat == K.FIND_MATE_FOX)
-            checkFindCondition = delegate(TileScript tileToCheck) { return tileToCheck.HasFox() && tileToCheck.animalOn.IsReadyToMate(); };
+            checkFindCondition = delegate(TileScript tileToCheck) { return tileToCheck.HasAnimal("Fox") && tileToCheck.animalOn.IsReadyToMate(); };
         else if (findWhat == K.FIND_FOOD_RABBIT)
-            checkFindCondition = delegate(TileScript tileToCheck) { return tileToCheck.HasRabbit(); };
+            checkFindCondition = delegate(TileScript tileToCheck) { return tileToCheck.HasAnimal("Bunny"); };
         else if (findWhat == K.FIND_SPECIFIC_TILE) {
             if (whichSpecificTile == null) {
                 print("ERROR: No specific tile given to BFSearcher.Find");

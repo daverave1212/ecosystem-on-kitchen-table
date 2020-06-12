@@ -6,30 +6,9 @@ using UnityEngine;
 public class PlaneScript : MonoBehaviour
 {
 
-    public GameObject _tileIndicatorPrefab;
-    public GameObject _tileIndicatorRedPrefab;
-    public GameObject _tileIndicatorYellowPrefab;
-    public Material _blueMaterial;
-
-    // Drag and drop the prefabs / materials here in Unity
-    public GameObject tilePrefab;
-    public GameObject plantPrefab;
-    public GameObject grassPrefab;
-    public GameObject flowersPrefab;
-
-    public GameObject rabbitPrefab;
-    public GameObject foxPrefab;
-
-    public GameObject leavesPrefab;
     public float leavesRotation = -90;
     public List<GameObject> allLeaves;
-    public GameObject windPrefab;
     public GameObject wind;
-    public GameObject carrotParticlesPrefab;
-    
-    public GameObject heartParticlesPrefab;
-    public GameObject meatParticlesPrefab;
-    public GameObject skullParticlesPrefab;
 
     public static PlaneScript self;
 
@@ -45,6 +24,9 @@ public class PlaneScript : MonoBehaviour
 
     public static List<RabbitScript> rabbits = new List<RabbitScript>();
     public static List<FoxScript> foxes = new List<FoxScript>();
+
+    public /*debug*/ int _nRabbits = 0;
+    public /*debug*/ int _nFoxes = 0;
 
     public static bool tileExists(int i, int j) {
         return i >= 0 && i < nTilesRows && j >= 0 && j < nTilesCols;
@@ -68,7 +50,7 @@ public class PlaneScript : MonoBehaviour
     void SpawnTiles() {        
         allLeaves = new List<GameObject>();
         leavesRotation = UnityEngine.Random.Range(0, 360);
-        wind = Instantiate(windPrefab);
+        wind = Instantiate(Prefabs.self.windPrefab);
         wind.tag = "Particle";
         wind.transform.position = new Vector3(transform.position.x, K.LEAVES_HEIGHT, transform.position.z);
         wind.transform.eulerAngles = new Vector3(0, leavesRotation, 0);
@@ -83,7 +65,7 @@ public class PlaneScript : MonoBehaviour
         var rand = new System.Random();
         for (int row = 0; row<nTilesRows; row++) {
             for (int col = 0; col<nTilesCols; col++) {
-                var newTile = Instantiate(tilePrefab);
+                var newTile = Instantiate(Prefabs.self.tilePrefab);
                 var x = leftMostPoint + col * K.TILE_SIZE_X;
                 var y = K.TILE_SIZE_Y / 2;
                 var z = topMostPoint + row * K.TILE_SIZE_Z;
@@ -121,33 +103,8 @@ public class PlaneScript : MonoBehaviour
         }
     }
 
-    int _nRabbits = 0;
-    public static RabbitScript SpawnRabbit(TileScript onWhichTile, RabbitScript[] parents = null) {
-        if (!onWhichTile.IsFree()) throw new System.Exception($"Error: Tile to spawn rabbit ({onWhichTile.row},{onWhichTile.col}) is not free!");
-        PlaneScript.self._nRabbits ++;
-        var theRabbit = Instantiate(PlaneScript.self.rabbitPrefab);
-        theRabbit.GetComponent<Animator>().Play("Spawn");
-        theRabbit.tag = "Animal";
-        var rabbitScript = theRabbit.GetComponent<RabbitScript>();
-        rabbitScript.PutOnTile(onWhichTile);
-        rabbitScript.parents = parents;
-        rabbits.Add(rabbitScript);
-        return rabbitScript;
-    }
 
-    int _nFoxes = 0;
-    public static FoxScript SpawnFox(TileScript onWhichTile, FoxScript[] parents = null) {
-        if (!onWhichTile.IsFree()) throw new System.Exception("Error: Tile to spawn fox is not free!");
-        PlaneScript.self._nFoxes ++;
-        var theFox = Instantiate(PlaneScript.self.foxPrefab);
-        theFox.GetComponent<Animator>().Play("Spawn");
-        theFox.tag = "Animal";
-        var foxScript = theFox.GetComponent<FoxScript>();
-        foxScript.PutOnTile(onWhichTile);
-        foxScript.parents = parents;
-        foxes.Add(foxScript);
-        return foxScript;
-    }
+
 
     void SpawnStartingRabbits() {
         bool trySpawnOneRabbit() {
@@ -155,7 +112,7 @@ public class PlaneScript : MonoBehaviour
             var rCol = Random.Range(0, nTilesCols);
             var theTile = tiles[rRow, rCol].GetComponent<TileScript>();
             if (theTile.IsOccupied()) return false;
-            SpawnRabbit(theTile);
+            Spawner.SpawnRabbit(theTile);
             return true;
         }
         void trySpawnRabbitNTimes(int times) {
@@ -179,7 +136,7 @@ public class PlaneScript : MonoBehaviour
             var rCol = Random.Range(0, nTilesCols);
             var theTile = tiles[rRow, rCol].GetComponent<TileScript>();
             if (theTile.IsOccupied()) return false;
-            SpawnFox(theTile);
+            Spawner.SpawnFox(theTile);
             return true;
         }
         void trySpawnFoxNTimes(int times) {
@@ -199,7 +156,7 @@ public class PlaneScript : MonoBehaviour
 
     void DropHunger() {
         foreach (var r in rabbits) { r.AddHunger(-1); }
-        foreach (var f in foxes) { f.AddHunger(-1); }
+        foreach (var f in foxes) { f.AddHunger(-2); }
     }
 
     // Start is called before the first frame update
@@ -209,6 +166,7 @@ public class PlaneScript : MonoBehaviour
         SpawnStartingPlants();
         SpawnStartingRabbits();
         SpawnStartingFoxes();
+        InvokeRepeating("DropHunger", 1.0f, 1.0f);
     }
 
     

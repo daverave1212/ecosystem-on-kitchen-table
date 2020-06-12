@@ -8,19 +8,9 @@ public class RabbitScript: AnimalScript {
     public bool _printsTick = false;
 
 	void Start() {
-		name = "Bunny";
-		GetComponent<Animator>().Play("Idle");
-        InvokeRepeating("Tick", speed, speed);
+        mateFindType = K.FIND_MATE_RABBIT;
+		Initialize("Bunny");
 	}
-
-    public void Tick() {
-        if (currentHunger <= 0) {
-            Kill();
-        }
-        var mood = GetMood();
-        var direction = FindPath(mood);
-        MoveInDirection(direction);
-    }
 
     int TryEat() {
         if (EatAdjacentPlantIfNear()) {
@@ -30,47 +20,21 @@ public class RabbitScript: AnimalScript {
         }
     }
 
-    int TryMate() {
-        var nearbyRabbit = GetAdjacentRabbit();
-        if (nearbyRabbit != null && nearbyRabbit == myMate) {
-            LookAtAnimal(myMate);
-            SpawnLoveParticles();
-            if (makesFirstStep) {
-                var babyRabbitTile = GetRandomAvailableAdjacentTile();
-                if (babyRabbitTile != null) {
-                    MakeBabyWithMyMateAndClear(babyRabbitTile);
-                    return K.NONE;
-                }
-            }
-            return K.NONE;
-        } else {
-            if (isMeetingMate) {
-                var directionToMoveTo = tileOn.GetDirectionToAdjacentTile(BFSearcher.Find(tileOn, K.FIND_SPECIFIC_TILE, whichSpecificTile: mateMeetingTile));
-                if (directionToMoveTo == K.NONE && makesFirstStep) {
-                    return tileOn.GetDirectionToAdjacentTile(mateMeetingTile);
-                } else {
-                    return directionToMoveTo;
-                }
-            } else {
-                myMate = null;
-                mateMeetingTile = BFSearcher.Find(startTile: tileOn, findWhat: K.FIND_MATE_RABBIT, onlyToMiddle: true, foundAnimalCallback: delegate(AnimalScript a) {
-                    myMate = a;
-                });
-                if (mateMeetingTile == null)
-                    return GetRandomAvailableDirection();
-                isMeetingMate = true;
-                makesFirstStep = true;
-                myMate.isMeetingMate = true;
-                myMate.mateMeetingTile = mateMeetingTile;
-                myMate.makesFirstStep = false;
-                myMate.myMate = this;
-                var directionToMoveTo = tileOn.GetDirectionToAdjacentTile(BFSearcher.Find(tileOn, K.FIND_SPECIFIC_TILE, whichSpecificTile: mateMeetingTile));
-                return directionToMoveTo;
-            }   
-        }
+    protected override AnimalScript SpawnBaby(TileScript spawnBabyOnWhichTile) {
+        return Spawner.SpawnRabbit(spawnBabyOnWhichTile, new[] {(RabbitScript)this, (RabbitScript)myMate});
     }
 
-    int FindPath(int mood) {
+    protected override AnimalScript GetAdjacentMate() {
+        return GetAdjacentAnimal("Bunny");
+    }
+
+    public override void Destruct() {
+        PlaneScript.rabbits.Remove((RabbitScript) this);
+    }
+
+
+
+    public override int FindPath(int mood) {
 		if (mood == K.NO_MOOD) {
 			return GetRandomAvailableDirection();
 		} else if (mood == K.EAT) {
