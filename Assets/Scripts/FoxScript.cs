@@ -6,8 +6,8 @@ public class FoxScript : AnimalScript
 {
 
     void Start() {
-        speed = 1.25f;
-        mateFindType = K.FIND_MATE_FOX;
+        speed = 0.95f;
+        mateFindType = BFSearcher.FindWhat.MateFox;
 		Initialize("Fox");
 	}
 
@@ -23,23 +23,22 @@ public class FoxScript : AnimalScript
         PlaneScript.foxes.Remove((FoxScript) this);
     }
 
-    int TryEat() {
-        if (EatAdjacentAndDiagonalAnimalIfNear("Rabbit")) {
-            return K.NONE;
+    Direction TryEat() {
+        if (EatAdjacentAndDiagonalAnimalIfNear("Bunny")) {
+            return Direction.None;
         } else {
-            var tileToGo = BFSearcher.Find(tileOn, K.FIND_FOOD_RABBIT);
+            var tileToGo = BFSearcher.Find(tileOn, BFSearcher.FindWhat.FoodRabbit);
             var directionToGo = tileOn.GetDirectionToAdjacentTile(tileToGo);
-            print($"Fox: going to direction {K.directionToString[directionToGo]}");
             return directionToGo;
         }
     }
 
-    public override int FindPath(int mood) {
-		if (mood == K.NO_MOOD) {
+    public override Direction FindPath(Mood mood) {
+		if (mood == Mood.None) {
 			return GetRandomAvailableDirection();
-		} else if (mood == K.EAT) {
+		} else if (mood == Mood.Eat) {
             return TryEat();
-		} else if (mood == K.MATE) {
+		} else if (mood == Mood.Mate) {
             return TryMate();
         }
 		return GetRandomAvailableDirection();

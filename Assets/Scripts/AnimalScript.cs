@@ -29,7 +29,7 @@ public class AnimalScript : MonoBehaviour
     public bool IsHungry() { return currentHunger < ((float) maxHunger) * 0.75; }
     public bool IsReadyToMate() { return currentHappiness >= maxHappiness; }
 
-    protected int mateFindType;
+    protected BFSearcher.FindWhat mateFindType;
 
     protected void Initialize(string n) {
         name = n;
@@ -92,25 +92,25 @@ public class AnimalScript : MonoBehaviour
 
     public Vector2Int GetPositionInMatrix() { return new Vector2Int(tileOn.row, tileOn.col); }
 
-    public int GetMood() {
+    public Mood GetMood() {
         if (IsReadyToMate() && !IsHungry()) {
-            return K.MATE;
+            return Mood.Mate;
         }
         if (IsHungry()) {
-            return K.EAT;
+            return Mood.Eat;
         }
         AddHappiness(5);
-        return K.NO_MOOD;
+        return Mood.None;
     }
 
 
     // Override these functions
     public virtual void Destruct() { throw new Exception("Destruct not overridden!!!"); }
-    public virtual int FindPath(int mood) { throw new Exception("FindPath not overridden!!"); }
+    public virtual Direction FindPath(Mood mood) { throw new Exception("FindPath not overridden!!"); }
     protected virtual AnimalScript SpawnBaby(TileScript spawnBabyOnWhichTile) { throw new Exception("SpawnBaby not overridden!!"); }
     protected virtual AnimalScript GetAdjacentMate() { throw new Exception("GetAdjacentMate not overridden!!"); }
 
-    protected int TryMate() {
+    protected Direction TryMate() {
         var nearbyMate = GetAdjacentMate();
         if (nearbyMate != null && nearbyMate == myMate) {
             LookAtAnimal(myMate);
@@ -119,10 +119,10 @@ public class AnimalScript : MonoBehaviour
                 var babyTile = GetRandomAvailableAdjacentTile();
                 if (babyTile != null) {
                     MakeBabyWithMyMateAndClear(babyTile);
-                    return K.NONE;
+                    return Direction.None;
                 }
             }
-            return K.NONE;
+            return Direction.None;
         } else {
             if (isMeetingMate) {
                 return GetDirectionToMeetingTile();
@@ -151,10 +151,10 @@ public class AnimalScript : MonoBehaviour
         var to = new Vector3(tile.transform.position.x, transform.position.y, tile.transform.position.z);
         MoveToPosition(to);
     }
-    public void MoveInDirection(int direction) {
+    public void MoveInDirection(Direction direction) {
         var adjacentTile = tileOn.GetAdjacentTile(direction);
         if (adjacentTile == null) {
-            print("Null adjacent tile when moving in direction " + K.directionToString[direction]);
+            print($"Null adjacent tile when moving in direction {direction.ToString()}");
         }
         if (adjacentTile != tileOn) {
             MoveToTile(adjacentTile);
@@ -212,7 +212,9 @@ public class AnimalScript : MonoBehaviour
 
     public bool EatAdjacentAndDiagonalAnimalIfNear(string animalName) {
         var prey = GetAdjacentAndDiagonalAnimal(animalName);
-        if (prey == null) return false;
+        if (prey == null) {
+            return false;
+        }
         LookAtAnimal(prey);
         prey.Explode();
         AddHunger(75);
@@ -223,7 +225,6 @@ public class AnimalScript : MonoBehaviour
         var adjacentTiles = tileOn.GetAdjacentTiles();
         foreach (var tile in adjacentTiles) {
             if (tile.HasAnimal(animalName)) {
-                print($"Tile {tile.row}, {tile.col} definitely has a {animalName}.");
                 return tile.animalOn;
             }
         }
@@ -254,7 +255,7 @@ public class AnimalScript : MonoBehaviour
         return null;
     }
 
-    public int GetRandomAvailableDirection() {
+    public Direction GetRandomAvailableDirection() {
         var adjacentTiles = tileOn.GetAdjacentTiles();
         for (int i = 0; i < adjacentTiles.Length; i++) {
              int rnd = UnityEngine.Random.Range(0, adjacentTiles.Length);
@@ -264,7 +265,7 @@ public class AnimalScript : MonoBehaviour
         }
         foreach (var tile in adjacentTiles)
             if (tile.IsFree()) return tileOn.GetDirectionToAdjacentTile(tile);
-        return K.NONE;
+        return Direction.None;
     }
 
     public void SpawnLoveParticles() {
@@ -276,7 +277,7 @@ public class AnimalScript : MonoBehaviour
         );
     }
 
-    public int GetDirectionToMeetAMate() {
+    public Direction GetDirectionToMeetAMate() {
         myMate = null;
         mateMeetingTile = BFSearcher.Find(startTile: tileOn, findWhat: mateFindType, onlyToMiddle: true, foundAnimalCallback: delegate(AnimalScript a) {
             myMate = a;
@@ -289,13 +290,13 @@ public class AnimalScript : MonoBehaviour
         myMate.mateMeetingTile = mateMeetingTile;
         myMate.makesFirstStep = false;
         myMate.myMate = this;
-        var directionToMoveTo = tileOn.GetDirectionToAdjacentTile(BFSearcher.Find(tileOn, K.FIND_SPECIFIC_TILE, whichSpecificTile: mateMeetingTile));
+        var directionToMoveTo = tileOn.GetDirectionToAdjacentTile(BFSearcher.Find(tileOn, BFSearcher.FindWhat.SpecificTile, whichSpecificTile: mateMeetingTile));
         return directionToMoveTo;
     }
 
-    public int GetDirectionToMeetingTile() {
-        var directionToMoveTo = tileOn.GetDirectionToAdjacentTile(BFSearcher.Find(tileOn, K.FIND_SPECIFIC_TILE, whichSpecificTile: mateMeetingTile));
-        if (directionToMoveTo == K.NONE && makesFirstStep) {
+    public Direction GetDirectionToMeetingTile() {
+        var directionToMoveTo = tileOn.GetDirectionToAdjacentTile(BFSearcher.Find(tileOn, BFSearcher.FindWhat.SpecificTile, whichSpecificTile: mateMeetingTile));
+        if (directionToMoveTo == Direction.None && makesFirstStep) {
             return tileOn.GetDirectionToAdjacentTile(mateMeetingTile);
         } else {
             return directionToMoveTo;

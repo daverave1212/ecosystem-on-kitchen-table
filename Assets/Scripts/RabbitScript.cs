@@ -8,15 +8,15 @@ public class RabbitScript: AnimalScript {
     public bool _printsTick = false;
 
 	void Start() {
-        mateFindType = K.FIND_MATE_RABBIT;
+        mateFindType = BFSearcher.FindWhat.MateRabbit;
 		Initialize("Bunny");
 	}
 
-    int TryEat() {
+    Direction TryEat() {
         if (EatAdjacentPlantIfNear()) {
-            return K.NONE;
+            return Direction.None;
         } else {
-            return tileOn.GetDirectionToAdjacentTile(BFSearcher.Find(tileOn, K.FIND_PLANT));
+            return tileOn.GetDirectionToAdjacentTile(BFSearcher.Find(tileOn, BFSearcher.FindWhat.Plant));
         }
     }
 
@@ -34,14 +34,14 @@ public class RabbitScript: AnimalScript {
 
 
 
-    public override int FindPath(int mood) {
-		if (mood == K.NO_MOOD) {
+    public override Direction FindPath(Mood mood) {
+		if (mood == Mood.None) {
 			return GetRandomAvailableDirection();
-		} else if (mood == K.EAT) {
+		} else if (mood == Mood.Eat) {
             return TryEat();
-		} else if (mood == K.MATE) {
+		} else if (mood == Mood.Mate) {
             return TryMate();
-        } else if (mood == K.RUN) {
+        } else if (mood == Mood.Run) {
 			// Don't make this one for now
 		}
 		return GetRandomAvailableDirection();

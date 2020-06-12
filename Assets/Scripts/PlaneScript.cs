@@ -14,12 +14,12 @@ public class PlaneScript : MonoBehaviour
 
     const int nTilesRows = 32;
     const int nTilesCols = 32;
-    const int nTrees = 20;
-    const int nInitialPlants = 16;
-    const int nInitialRabbits = 10;
-    const int nInitialFoxes = 2;
+    public int nTrees = 20;
+    public int nInitialPlants = 16;
+    public int nInitialRabbits = 10;
+    public int nInitialFoxes = 2;
 
-    public static string[,] terrainMatrix;
+    public static TileScript.TileType[,] terrainMatrix;
     public static GameObject[,] tiles;
 
     public static List<RabbitScript> rabbits = new List<RabbitScript>();

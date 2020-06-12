@@ -5,14 +5,21 @@ using UnityEngine;
 public class TileScript : MonoBehaviour
 {
 
-    public static string GRASS = "grass";
+    public enum TileType {
+        Grass,
+        Water,
+        Sand,
+        Tree,
+        None
+    }
+
+    /*public static string GRASS = "grass";
     public static string WATER = "water";
-    public static string SAND  = "sand";
+    public static string SAND  = "sand";*/
     public static bool isWaterAnimated = true;
 
-
-
-    public string type = "grass";
+    //public string type = "grass";
+    public TileType type = TileType.Grass;
     public int row = 0;
     public int col = 0;
     public AnimalScript animalOn = null;
@@ -28,14 +35,13 @@ public class TileScript : MonoBehaviour
     bool goingDown = true;
 
     public bool HasAnimal() { return animalOn != null; }
-    public bool HasAnimal(string animalName) => HasAnimal() && animalOn.name == animalName;
+    public bool HasAnimal(string animalName) { return animalOn != null && animalOn.name == animalName; }
     public bool HasPlant() { return plantOn != null; }
     public bool HasTree() { return tree != null; }
-    public bool IsOccupied() { return type == "water" || HasAnimal() || HasPlant() || HasTree(); }
+    public bool IsOccupied() { return type == TileType.Water || HasAnimal() || HasPlant() || HasTree(); }
     public bool IsFree() { return !IsOccupied(); }
     public void SpawnPlant() { plantOn = Spawner.SpawnPlant(transform.position); }
 
-    
     public TileScript GetLeftTile()  { return PlaneScript.GetTileScript(row, col - 1); }
     public TileScript GetDownTile()  { return PlaneScript.GetTileScript(row, col + 1); }
     public TileScript GetRightTile() { return PlaneScript.GetTileScript(row + 1, col); }
@@ -45,11 +51,11 @@ public class TileScript : MonoBehaviour
     public TileScript GetDownLeftTile()  { return PlaneScript.GetTileScript(row + 1, col - 1); }
     public TileScript GetDownRightTile()  { return PlaneScript.GetTileScript(row + 1, col + 1); }
 
-    public TileScript GetAdjacentTile(int direction) {  // direction = AnimalScript.UP or DOWN or etc
-        if (direction == K.UP)      return GetUpTile();
-        if (direction == K.RIGHT)   return GetRightTile();
-        if (direction == K.DOWN)    return GetDownTile();
-        if (direction == K.LEFT)    return GetLeftTile();
+    public TileScript GetAdjacentTile(Direction direction) {  // direction = AnimalScript.UP or DOWN or etc
+        if (direction == Direction.Up)      return GetUpTile();
+        if (direction == Direction.Right)   return GetRightTile();
+        if (direction == Direction.Down)    return GetDownTile();
+        if (direction == Direction.Left)    return GetLeftTile();
         return this;
     }
 
@@ -89,12 +95,12 @@ public class TileScript : MonoBehaviour
         );
     }
 
-    public void Initialize(float x, float y, float z, int i, int j, string type) {
+    public void Initialize(float x, float y, float z, int i, int j, TileType type) {
         row = i;
         col = j;
         var yOffset = 0.05f;
-        if (type == "tree") {
-            type = "grass";
+        if (type == TileType.Tree) {
+            type = TileType.Grass;
             tree = Instantiate(Prefabs.self.treePrefab);
             tree.tag = "Plant";
             tree.transform.position = new Vector3(x, y, z);
@@ -111,7 +117,7 @@ public class TileScript : MonoBehaviour
         this.type = type;
         gameObject.transform.position = new Vector3(x, y, z);
         var material = Materials.self.grassMaterial;
-        if (type == "grass") {
+        if (type == TileType.Grass) {
             gameObject.transform.localScale += new Vector3(0, yOffset, 0);
             gameObject.transform.position += new Vector3(0, yOffset / 2, 0);
             if (Random.Range(1, 3) == 1) {
@@ -130,10 +136,10 @@ public class TileScript : MonoBehaviour
                 flowersOn.transform.eulerAngles = new Vector3(0, theRotation, 0);
             }
         }
-        if (type == "sand") {
+        if (type == TileType.Sand) {
             material = Materials.self.sandMaterial;
         }
-        if (type == "water") {
+        if (type == TileType.Water) {
             material = Materials.self.waterMaterial;
             gameObject.transform.localScale -= new Vector3(0, yOffset, 0);
             gameObject.transform.position -= new Vector3(0, yOffset / 2, 0);
@@ -165,16 +171,17 @@ public class TileScript : MonoBehaviour
         GetComponent<Renderer>().material = material;
     }
 
-    public int GetDirectionToAdjacentTile(TileScript adjacentTile) {
-        if (adjacentTile == null) return K.NONE;
+    public Direction GetDirectionToAdjacentTile(TileScript adjacentTile) {
+        if (adjacentTile == null) return Direction.None;
+        if (adjacentTile == this) return Direction.None;
         var up    = GetUpTile();
         var right = GetRightTile();
         var down  = GetDownTile();
         var left  = GetLeftTile();
-        if (adjacentTile == up)     return K.UP;
-        if (adjacentTile == right)  return K.RIGHT;
-        if (adjacentTile == down)   return K.DOWN;
-        if (adjacentTile == left)   return K.LEFT;
+        if (adjacentTile == up)     return Direction.Up;
+        if (adjacentTile == right)  return Direction.Right;
+        if (adjacentTile == down)   return Direction.Down;
+        if (adjacentTile == left)   return Direction.Left;
         var stackTrace = new System.Diagnostics.StackTrace();
         print(stackTrace);
         throw new System.Exception($"Error for tile ({row}, {col}): adjacentTile ({adjacentTile.row}, {adjacentTile.col}) given to GetDirectionToAdjacentTile is not adjacent!");
