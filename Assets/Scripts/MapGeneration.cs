@@ -5,12 +5,8 @@ using UnityEngine;
 
 public class MapGeneration : MonoBehaviour
 {
-    public const string grass = "grass";
-    public const string water = "water";
-    public const string sand = "sand";
-    public const string tree = "tree";
 
-    private void RandomGridGenerator(ref string[,] gameMap, int gridSize, int localGridSize, int x, int y, int w, System.Random rnd) {
+    private void RandomGridGenerator(ref TileScript.TileType[,] gameMap, int gridSize, int localGridSize, int x, int y, int w, System.Random rnd) {
         // Check if lake falls outside of grid and create start and end positions for x and y
         int xStart = Math.Max(x - localGridSize, 0);
         int yStart = Math.Max(y - localGridSize, 0);
@@ -25,34 +21,34 @@ public class MapGeneration : MonoBehaviour
                 float score = 1 - (distance / maxDistance);
                 // For each square inside the mini-grid generate a random weigth and compare that to w
                 if(score * (rnd.Next(0, 99)) >= w)
-                    gameMap[i,j] = water;
+                    gameMap[i,j] = TileScript.TileType.Water;
             }
     }
 
-    private void addSand(ref string[,] gameMap, int gridSize) {
+    private void addSand(ref TileScript.TileType[,] gameMap, int gridSize) {
         for(int i = 0; i < gridSize; i++)
             for(int j = 0; j < gridSize; j++) {
-                if(gameMap[i,j] == grass) {
-                    if(i > 0 && gameMap[i-1,j] == water)
-                        gameMap[i,j] = sand;
-                    if(j > 0 && gameMap[i,j-1] == water)
-                        gameMap[i,j] = sand;
-                    if(i < gridSize-1 && gameMap[i+1,j] == water)
-                        gameMap[i,j] = sand;
-                    if(j < gridSize-1 && gameMap[i,j+1] == water)
-                        gameMap[i,j] = sand;
+                if(gameMap[i,j] == TileScript.TileType.Grass) {
+                    if(i > 0 && gameMap[i-1,j] == TileScript.TileType.Water)
+                        gameMap[i,j] = TileScript.TileType.Sand;
+                    if(j > 0 && gameMap[i,j-1] == TileScript.TileType.Water)
+                        gameMap[i,j] = TileScript.TileType.Sand;
+                    if(i < gridSize-1 && gameMap[i+1,j] == TileScript.TileType.Water)
+                        gameMap[i,j] = TileScript.TileType.Sand;
+                    if(j < gridSize-1 && gameMap[i,j+1] == TileScript.TileType.Water)
+                        gameMap[i,j] = TileScript.TileType.Sand;
                 }
             }
     }
 
-    private void addTrees(ref string[,] gameMap, int gridSize, int numberOfTrees, System.Random rnd) {
+    private void addTrees(ref TileScript.TileType[,] gameMap, int gridSize, int numberOfTrees, System.Random rnd) {
         int n = 0;
         List<int> xPoz = new List<int>();
         List<int> yPoz = new List<int>();
         // Mark all possible tree positions
         for(int i = 0; i < gridSize; i++)
             for(int j = 0; j < gridSize; j++)
-                if(gameMap[i,j] == grass) {
+                if(gameMap[i,j] == TileScript.TileType.Grass) {
                     xPoz.Add(i);
                     yPoz.Add(j);
                     n++;
@@ -63,14 +59,14 @@ public class MapGeneration : MonoBehaviour
         // Choose random values for tree positions than pop them from the list
         for(int i = 0; i < numberOfTrees; i++) {
             int k = rnd.Next(0, n-1);
-            gameMap[xPoz[k],yPoz[k]] = tree;
+            gameMap[xPoz[k],yPoz[k]] = TileScript.TileType.Tree;
             xPoz.RemoveAt(k);
             yPoz.RemoveAt(k);
             n = n-1;
         }
     }
 
-    private void removeSandFromWater(ref string[,] gameMap, int gridSize)
+    private void removeSandFromWater(ref TileScript.TileType[,] gameMap, int gridSize)
     {
         int j = 0;
         int begin = 0;
@@ -79,13 +75,13 @@ public class MapGeneration : MonoBehaviour
 		while(j < gridSize) {
 			for(int i = 0; i < gridSize; i++)
             {
-            	if (gameMap[i, j] == sand && isBigger == false)
+            	if (gameMap[i, j] == TileScript.TileType.Sand && isBigger == false)
             	{
                 	begin = i;
                 	isBigger = true;
                     continue;
                 }
-				if (gameMap[i, j] == sand)
+				if (gameMap[i, j] == TileScript.TileType.Sand)
             	{
                 	last = i;
             	}
@@ -93,7 +89,7 @@ public class MapGeneration : MonoBehaviour
             
             for (int l = begin + 1; l < last; l++)
             {
-                gameMap[l, j] = water;
+                gameMap[l, j] = TileScript.TileType.Water;
             }
 			//print("Value of begin: " + begin);
             //print("Value of last: " + last);
@@ -104,7 +100,7 @@ public class MapGeneration : MonoBehaviour
 		}
     }
 
-    private void addSandNearWater(ref string[,] gameMap, int gridSize)
+    private void addSandNearWater(ref TileScript.TileType[,] gameMap, int gridSize)
     {
         for (int i = 0; i < gridSize; i++)
         {
@@ -112,16 +108,16 @@ public class MapGeneration : MonoBehaviour
             {
                 if (i < gridSize - 1 && j < gridSize - 1)
                 {
-                    if ((gameMap[i, j] == grass && gameMap[i + 1, j] == water) ||
-                        (gameMap[i, j] == grass && gameMap[i, j + 1] == water))
+                    if ((gameMap[i, j] == TileScript.TileType.Grass && gameMap[i + 1, j] == TileScript.TileType.Water) ||
+                        (gameMap[i, j] == TileScript.TileType.Grass && gameMap[i, j + 1] == TileScript.TileType.Water))
                     {
-                        gameMap[i, j] = sand;
+                        gameMap[i, j] = TileScript.TileType.Sand;
                     }
                     
-                    else if ((gameMap[i, j] == water && gameMap[i + 1, j] == grass) ||
-                        (gameMap[i, j] == water && gameMap[i, j + 1] == grass))
+                    else if ((gameMap[i, j] == TileScript.TileType.Water && gameMap[i + 1, j] == TileScript.TileType.Grass) ||
+                        (gameMap[i, j] == TileScript.TileType.Water && gameMap[i, j + 1] == TileScript.TileType.Grass))
                     {
-                        gameMap[i, j] = sand;
+                        gameMap[i, j] = TileScript.TileType.Sand;
                     }
                 } 
             }
@@ -136,13 +132,13 @@ public class MapGeneration : MonoBehaviour
     w is the minimum weigth needed for a square to become water, providing grater control on lake generation; w needs to be between 0 and 99 (smaller w for larger lakes);
     numberOfTrees is the number of trees to be added; if there isn't enough space, all possible space is filled and the two dimensional array is returned as is.
     */
-    public string[,] Generate(int gridSize, int maxLakeSize, int maxNumberOfLakes, int w, int numberOfTrees) {
+    public TileScript.TileType[,] Generate(int gridSize, int maxLakeSize, int maxNumberOfLakes, int w, int numberOfTrees) {
         System.Random rnd = new System.Random();
-        string [,] gameMap = new string [gridSize, gridSize];
+        TileScript.TileType [,] gameMap = new TileScript.TileType [gridSize, gridSize];
         // Initialize the grid
         for(int i = 0; i < gridSize; i++)
             for(int j = 0; j < gridSize; j++)
-                gameMap[i,j] = grass;
+                gameMap[i,j] = TileScript.TileType.Grass;
         for(int i = 0; i <= maxNumberOfLakes; i++) {
             // Generate lake center positions
             int x = rnd.Next(0, gridSize-1);

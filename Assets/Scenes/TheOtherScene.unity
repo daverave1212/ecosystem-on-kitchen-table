@@ -851,6 +851,11 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Plane
       objectReference: {fileID: 0}
+    - target: {fileID: 7323461324839004451, guid: 7bf3f2719ab6a9c4b9a992e5a7a00c7b,
+        type: 3}
+      propertyPath: nInitialFoxes
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7bf3f2719ab6a9c4b9a992e5a7a00c7b, type: 3}
 --- !u!1001 &3508119904895687917
