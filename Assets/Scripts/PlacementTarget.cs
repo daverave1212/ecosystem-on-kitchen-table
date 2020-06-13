@@ -75,8 +75,8 @@ public class PlacementTarget : MonoBehaviour
             RaycastHit physicsHit;
             Physics.Raycast(Camera.current.transform.position, Camera.current.transform.forward, out physicsHit,
                 Mathf.Infinity);
-
             
+
             _placementPoseIsValid = hits.Count > 0 && physicsHit.collider == null;
             if (_placementPoseIsValid)
             {
