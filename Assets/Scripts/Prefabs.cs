@@ -28,7 +28,7 @@ public class Prefabs : MonoBehaviour {
     public GameObject meatParticlesPrefab;
     public GameObject skullParticlesPrefab;
 
-    void Start() {
+    void Awake() {
         self = this;
     }
 

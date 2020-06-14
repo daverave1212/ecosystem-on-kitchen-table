@@ -51,7 +51,7 @@ public class PlaneScript : MonoBehaviour
         allLeaves = new List<GameObject>();
         leavesRotation = UnityEngine.Random.Range(0, 360);
         wind = Instantiate(Prefabs.self.windPrefab);
-        wind.tag = "Particle";
+        wind.tag = "Particles";
         wind.transform.position = new Vector3(transform.position.x, K.LEAVES_HEIGHT, transform.position.z);
         wind.transform.eulerAngles = new Vector3(0, leavesRotation, 0);
         InvokeRepeating("AdjustWind", 20f, 20f);

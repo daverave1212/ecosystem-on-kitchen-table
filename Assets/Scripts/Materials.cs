@@ -10,7 +10,7 @@ public class Materials : MonoBehaviour {
     public Material waterMaterial;
     public Material sandMaterial;
 
-    void Start() {
+    void Awake() {
         self = this;
     }
 
