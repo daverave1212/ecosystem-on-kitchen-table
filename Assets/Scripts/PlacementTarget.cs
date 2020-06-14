@@ -16,6 +16,8 @@ public class PlacementTarget : MonoBehaviour
 
     [SerializeField] private ARRaycastManager raycastManager;
 
+    [SerializeField] private List<GameObject> arHelpers;
+
     private bool _placementPoseIsValid = false;
 
     private GameObject prefabRef;
@@ -36,7 +38,6 @@ public class PlacementTarget : MonoBehaviour
         if (!prefabRef)
         {
             prefabRef = Instantiate(whatObject, Vector3.zero, _targetPlacement.rotation);
-            // prefabRef.transform.position = _targetPlacement.position;
             StartCoroutine(ParentHack(_targetPlacement.position));
         }
         else
@@ -81,6 +82,11 @@ public class PlacementTarget : MonoBehaviour
             if (_placementPoseIsValid)
             {
                 _targetPlacement = hits[0].pose;
+                arHelpers.ForEach(helper => helper.SetActive(false));
+            }
+            else
+            {
+                arHelpers.ForEach(helper => helper.SetActive(true));
             }
         }
     }
