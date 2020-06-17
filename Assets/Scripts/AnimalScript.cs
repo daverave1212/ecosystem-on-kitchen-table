@@ -162,18 +162,15 @@ public class AnimalScript : MonoBehaviour
     }
 
     public void PutOnTile(GameObject tileObject) {
-        gameObject.transform.position = new Vector3(tileObject.transform.position.x, K.ANIMAL_FEET_HEIGHT, tileObject.transform.position.y);
+        gameObject.transform.position = tileObject.transform.position + new Vector3(0, K.ANIMAL_FEET_HEIGHT, 0);
         var tile = tileObject.GetComponent<TileScript>();
         updateTile(tile);
     }
 
-    void _ToThatTile() {
-        gameObject.transform.position = tileOn.GetPosition(defaultY : K.ANIMAL_FEET_HEIGHT);
-    }
 
     public void PutOnTile(TileScript tile) {
+        gameObject.transform.position = tile.gameObject.transform.position + new Vector3(0, K.ANIMAL_FEET_HEIGHT, 0);
         updateTile(tile);
-        gameObject.transform.position = tileOn.GetPosition(defaultY : K.ANIMAL_FEET_HEIGHT);
     }
 
 
