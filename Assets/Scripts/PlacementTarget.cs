@@ -17,6 +17,8 @@ public class PlacementTarget : MonoBehaviour
     [SerializeField] private ARRaycastManager raycastManager;
 
     [SerializeField] private List<GameObject> arHelpers;
+    
+    [SerializeField] private float offsetHeight = 5.0f;
 
     private bool _placementPoseIsValid = false;
 
@@ -39,11 +41,13 @@ public class PlacementTarget : MonoBehaviour
         {
             prefabRef = Instantiate(whatObject, Vector3.zero, _targetPlacement.rotation);
             StartCoroutine(ParentHack(_targetPlacement.position));
+            _placementPoseIsValid = false;
+            UpdatePlacementTarget();
         }
-        else
-        {
-            prefabRef.transform.position = _targetPlacement.position * 15;
-        }
+        // else
+        // {
+        //     prefabRef.transform.position = _targetPlacement.position * 15;
+        // }
     }
 
     IEnumerator ParentHack(Vector3 pos)
@@ -61,13 +65,14 @@ public class PlacementTarget : MonoBehaviour
         }
 
         objectCenter.transform.position = pos * 15;
+        objectCenter.transform.position = objectCenter.transform.position - new Vector3(0.0f, offsetHeight, 0.0f);
         prefabRef.transform.localScale = Vector3.zero;
         prefabRef = objectCenter;
     }
 
     private void UpdatePlacementPose()
     {
-        if (Camera.current)
+        if (Camera.current && !prefabRef)
         {
             Vector3 screenCenter = Camera.current.ViewportToScreenPoint(new Vector3(0.5f, 0.5f));
             List<ARRaycastHit> hits = new List<ARRaycastHit>();

@@ -352,6 +352,7 @@ MonoBehaviour:
   - {fileID: 259715463}
   - {fileID: 165585583}
   - {fileID: 704956093}
+  offsetHeight: 2
 --- !u!4 &223974228
 Transform:
   m_ObjectHideFlags: 0
