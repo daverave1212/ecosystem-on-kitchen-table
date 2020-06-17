@@ -28,7 +28,7 @@ public class Prefabs : MonoBehaviour {
     public GameObject meatParticlesPrefab;
     public GameObject skullParticlesPrefab;
 
-    void Start() {
+    void Awake() {
         if (Instance != null) throw new System.Exception("Prefabs singleton already instantiated!");
         Instance = this;
     }

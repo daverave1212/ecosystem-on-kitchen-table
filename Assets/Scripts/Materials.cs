@@ -10,7 +10,7 @@ public class Materials : MonoBehaviour {
     public Material waterMaterial;
     public Material sandMaterial;
 
-    void Start() {
+    void Awake() {
         if (Instance != null) throw new System.Exception("Materials singleton already instantiated!");
         Instance = this;
     }
