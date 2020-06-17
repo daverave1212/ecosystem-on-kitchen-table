@@ -101,27 +101,27 @@ public class TileScript : MonoBehaviour
         var yOffset = 0.05f;
         if (type == TileType.Tree) {
             type = TileType.Grass;
-            tree = Instantiate(Prefabs.self.treePrefab);
+            tree = Instantiate(Prefabs.Instance.treePrefab);
             tree.tag = "Plant";
             tree.transform.position = new Vector3(x, y, z);
             var theRotation = UnityEngine.Random.Range(0, 360);
             tree.transform.eulerAngles = new Vector3(0, theRotation, 0);
             if (Random.Range(1, 3) == 1) {
-                var leaves = Instantiate(Prefabs.self.leavesPrefab);
+                var leaves = Instantiate(Prefabs.Instance.leavesPrefab);
                 leaves.tag = "Particles";
-                PlaneScript.self.allLeaves.Add(leaves);
+                PlaneScript.Instance.allLeaves.Add(leaves);
                 leaves.transform.position = new Vector3(x, y + K.LEAVES_HEIGHT, z);
-                leaves.transform.eulerAngles = new Vector3(0, PlaneScript.self.leavesRotation, 0);
+                leaves.transform.eulerAngles = new Vector3(0, PlaneScript.Instance.leavesRotation, 0);
             }
         }
         this.type = type;
         gameObject.transform.position = new Vector3(x, y, z);
-        var material = Materials.self.grassMaterial;
+        var material = Materials.Instance.grassMaterial;
         if (type == TileType.Grass) {
             gameObject.transform.localScale += new Vector3(0, yOffset, 0);
             gameObject.transform.position += new Vector3(0, yOffset / 2, 0);
             if (Random.Range(1, 3) == 1) {
-                grassOn = Instantiate(Prefabs.self.grassPrefab);
+                grassOn = Instantiate(Prefabs.Instance.grassPrefab);
                 grassOn.tag = "Plant";
                 grassOn.transform.position = new Vector3(transform.position.x, transform.position.y + K.ANIMAL_FEET_HEIGHT, transform.position.z);
                 //grassOn.transform.eulerAngles = new Vector3(0, theRotation, 0);
@@ -129,7 +129,7 @@ public class TileScript : MonoBehaviour
                 grassOn.transform.eulerAngles = new Vector3(0, theRotation, 0);
             }
             if (Random.Range(1, 5) == 1) {
-                flowersOn = Instantiate(Prefabs.self.flowersPrefab);
+                flowersOn = Instantiate(Prefabs.Instance.flowersPrefab);
                 flowersOn.tag = "Plant";
                 flowersOn.transform.position = new Vector3(transform.position.x, transform.position.y + K.ANIMAL_FEET_HEIGHT, transform.position.z);
                 float theRotation = UnityEngine.Random.Range(0, 360);
@@ -137,10 +137,10 @@ public class TileScript : MonoBehaviour
             }
         }
         if (type == TileType.Sand) {
-            material = Materials.self.sandMaterial;
+            material = Materials.Instance.sandMaterial;
         }
         if (type == TileType.Water) {
-            material = Materials.self.waterMaterial;
+            material = Materials.Instance.waterMaterial;
             gameObject.transform.localScale -= new Vector3(0, yOffset, 0);
             gameObject.transform.position -= new Vector3(0, yOffset / 2, 0);
             isWater = true;
@@ -189,22 +189,22 @@ public class TileScript : MonoBehaviour
 
     public void KillPlant() {
         if (HasPlant()) {
-            var particles = Instantiate(Prefabs.self.carrotParticlesPrefab);    // It will autodestruct because it has a script, no worries
+            var particles = Instantiate(Prefabs.Instance.carrotParticlesPrefab);    // It will autodestruct because it has a script, no worries
             particles.transform.position = plantOn.transform.position + new Vector3(0, 0.5f, 0);
             Destroy(plantOn);
         }
     }
 
     public void _MarkBlue() {
-        var indicator = Instantiate(Prefabs.self._tileIndicatorPrefab);
+        var indicator = Instantiate(Prefabs.Instance._tileIndicatorPrefab);
         indicator.transform.position = gameObject.transform.position;
     }
     public void _MarkRed() {
-        var indicator = Instantiate(Prefabs.self._tileIndicatorRedPrefab);
+        var indicator = Instantiate(Prefabs.Instance._tileIndicatorRedPrefab);
         indicator.transform.position = gameObject.transform.position;
     }
     public void _MarkYellow() {
-        var indicator = Instantiate(Prefabs.self._tileIndicatorYellowPrefab);
+        var indicator = Instantiate(Prefabs.Instance._tileIndicatorYellowPrefab);
         indicator.transform.position = gameObject.transform.position;
     }
 }

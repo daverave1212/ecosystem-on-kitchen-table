@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Prefabs : MonoBehaviour {
 
-    public static Prefabs self;
+    public static Prefabs Instance  {get; private set;} = null;
 
     public GameObject treePrefab;
 
@@ -29,7 +29,8 @@ public class Prefabs : MonoBehaviour {
     public GameObject skullParticlesPrefab;
 
     void Start() {
-        self = this;
+        if (Instance != null) throw new System.Exception("Prefabs singleton already instantiated!");
+        Instance = this;
     }
 
 

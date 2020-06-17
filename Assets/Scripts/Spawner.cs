@@ -5,11 +5,11 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     
-    public static Spawner self;
+    public static Spawner Instance {get; private set;} = null;
 
     public static GameObject SpawnPlant(Vector3 position) {
-        var plantPrefab = Prefabs.self.plantPrefab;
-        var plantOn = Instantiate(Prefabs.self.plantPrefab);
+        var plantPrefab = Prefabs.Instance.plantPrefab;
+        var plantOn = Instantiate(Prefabs.Instance.plantPrefab);
         plantOn.tag = "Plant";
         plantOn.transform.position = position;
         return plantOn;
@@ -17,8 +17,8 @@ public class Spawner : MonoBehaviour
 
     public static RabbitScript SpawnRabbit(TileScript onWhichTile, RabbitScript[] parents = null) {
         if (!onWhichTile.IsFree()) throw new System.Exception($"Error: Tile to spawn rabbit ({onWhichTile.row},{onWhichTile.col}) is not free!");
-        PlaneScript.self._nRabbits ++;
-        var theRabbit = Instantiate(Prefabs.self.rabbitPrefab);
+        PlaneScript.Instance._nRabbits ++;
+        var theRabbit = Instantiate(Prefabs.Instance.rabbitPrefab);
         theRabbit.GetComponent<Animator>().Play("Spawn");
         theRabbit.tag = "Animal";
         var rabbitScript = theRabbit.GetComponent<RabbitScript>();
@@ -30,8 +30,8 @@ public class Spawner : MonoBehaviour
 
     public static FoxScript SpawnFox(TileScript onWhichTile, FoxScript[] parents = null) {
         if (!onWhichTile.IsFree()) throw new System.Exception("Error: Tile to spawn fox is not free!");
-        PlaneScript.self._nFoxes ++;
-        var theFox = Instantiate(Prefabs.self.foxPrefab);
+        PlaneScript.Instance._nFoxes ++;
+        var theFox = Instantiate(Prefabs.Instance.foxPrefab);
         theFox.GetComponent<Animator>().Play("Spawn");
         theFox.tag = "Animal";
         var foxScript = theFox.GetComponent<FoxScript>();
@@ -41,9 +41,9 @@ public class Spawner : MonoBehaviour
         return foxScript;
     }
 
-    void Start()
-    {
-        self = this;
+    void Start() {
+        if (Instance != null) throw new System.Exception("Spawner singleton already instantiated!");
+        Instance = this;
     }
 
 }

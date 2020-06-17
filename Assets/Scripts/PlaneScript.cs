@@ -10,7 +10,7 @@ public class PlaneScript : MonoBehaviour
     public List<GameObject> allLeaves;
     public GameObject wind;
 
-    public static PlaneScript self;
+    public static PlaneScript Instance;
 
     const int nTilesRows = 32;
     const int nTilesCols = 32;
@@ -50,7 +50,7 @@ public class PlaneScript : MonoBehaviour
     void SpawnTiles() {        
         allLeaves = new List<GameObject>();
         leavesRotation = UnityEngine.Random.Range(0, 360);
-        wind = Instantiate(Prefabs.self.windPrefab);
+        wind = Instantiate(Prefabs.Instance.windPrefab);
         wind.tag = "Particle";
         wind.transform.position = new Vector3(transform.position.x, K.LEAVES_HEIGHT, transform.position.z);
         wind.transform.eulerAngles = new Vector3(0, leavesRotation, 0);
@@ -65,7 +65,7 @@ public class PlaneScript : MonoBehaviour
         var rand = new System.Random();
         for (int row = 0; row<nTilesRows; row++) {
             for (int col = 0; col<nTilesCols; col++) {
-                var newTile = Instantiate(Prefabs.self.tilePrefab);
+                var newTile = Instantiate(Prefabs.Instance.tilePrefab);
                 var x = leftMostPoint + col * K.TILE_SIZE_X;
                 var y = K.TILE_SIZE_Y / 2;
                 var z = topMostPoint + row * K.TILE_SIZE_Z;
@@ -161,7 +161,7 @@ public class PlaneScript : MonoBehaviour
 
     // Start is called before the first frame update
     void Start() {
-        self = this;
+        Instance = this;
         SpawnTiles();
         SpawnStartingPlants();
         SpawnStartingRabbits();

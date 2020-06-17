@@ -67,7 +67,7 @@ public class AnimalScript : MonoBehaviour
     }
 
     public void SpawnMeatParticles() {
-        var particles = Instantiate(Prefabs.self.meatParticlesPrefab);    // It will autodestruct because it has a script, no worries
+        var particles = Instantiate(Prefabs.Instance.meatParticlesPrefab);    // It will autodestruct because it has a script, no worries
         particles.transform.position = new Vector3(
             gameObject.transform.position.x,
             gameObject.transform.position.y + K.ANIMAL_FEET_HEIGHT,
@@ -76,7 +76,7 @@ public class AnimalScript : MonoBehaviour
     }
 
     public void SpawnSkullParticles() {
-        var particles = Instantiate(Prefabs.self.skullParticlesPrefab);    // It will autodestruct because it has a script, no worries
+        var particles = Instantiate(Prefabs.Instance.skullParticlesPrefab);    // It will autodestruct because it has a script, no worries
         particles.transform.position = new Vector3(
             gameObject.transform.position.x,
             gameObject.transform.position.y + K.ANIMAL_FEET_HEIGHT,
@@ -269,7 +269,7 @@ public class AnimalScript : MonoBehaviour
     }
 
     public void SpawnLoveParticles() {
-        var particles = Instantiate(Prefabs.self.heartParticlesPrefab);    // It will autodestruct because it has a script, no worries
+        var particles = Instantiate(Prefabs.Instance.heartParticlesPrefab);    // It will autodestruct because it has a script, no worries
         particles.transform.position = new Vector3(
             (gameObject.transform.position.x + myMate.transform.position.x) / 2,
             (gameObject.transform.position.y + myMate.transform.position.y) / 2,
